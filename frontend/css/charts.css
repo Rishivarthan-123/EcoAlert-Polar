@@ -1,0 +1,398 @@
+/* ==========================================================================
+   ECOALERT POLAR - CHARTS & VISUALIZATIONS CSS
+   SVG Charts, Circular Risk Gauge, Deficit Zones & Tooltips
+   ========================================================================== */
+
+/* Chart Card & Layout Containers */
+.charts-grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.chart-card {
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.chart-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chart-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-highlight);
+  letter-spacing: -0.01em;
+}
+
+.chart-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-line {
+  width: 16px;
+  height: 2px;
+  border-radius: 1px;
+}
+
+.legend-line.actual { background: var(--primary-cyan); }
+.legend-line.predicted {
+  background: repeating-linear-gradient(90deg, var(--secondary-violet), var(--secondary-violet) 4px, transparent 4px, transparent 8px);
+  height: 2px;
+}
+.legend-line.peak { background: var(--critical-red); height: 1.5px; opacity: 0.7; }
+.legend-line.supply { background: var(--success-aurora); }
+.legend-line.wind { background: var(--primary-cyan); }
+.legend-line.solar { background: var(--warning-amber); }
+
+/* SVG Chart Canvas Container */
+.chart-container {
+  width: 100%;
+  height: 220px;
+  position: relative;
+  overflow: visible;
+}
+
+.chart-container-lg {
+  height: 300px;
+}
+
+.chart-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* SVG Chart Elements */
+.chart-grid-line {
+  stroke: rgba(150, 200, 230, 0.08);
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
+}
+
+.chart-axis-text {
+  fill: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.chart-line-actual {
+  fill: none;
+  stroke: var(--primary-cyan);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 6px rgba(85, 214, 255, 0.45));
+}
+
+.chart-line-predicted {
+  fill: none;
+  stroke: var(--secondary-violet);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-dasharray: 6 4;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 5px rgba(139, 124, 255, 0.4));
+}
+
+.chart-line-peak {
+  fill: none;
+  stroke: var(--critical-red);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+  opacity: 0.65;
+}
+
+.chart-line-supply {
+  fill: none;
+  stroke: var(--success-aurora);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 5px rgba(57, 230, 165, 0.35));
+}
+
+.chart-line-battery {
+  fill: none;
+  stroke: #ff9800;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px rgba(255, 152, 0, 0.4));
+}
+
+/* Shaded Risk Deficit Region */
+.chart-risk-region {
+  fill: rgba(255, 92, 122, 0.16);
+  stroke: rgba(255, 92, 122, 0.35);
+  stroke-width: 1;
+  stroke-dasharray: 2 2;
+  animation: pulseDeficit 3s infinite ease-in-out;
+}
+
+@keyframes pulseDeficit {
+  0%, 100% { fill-opacity: 0.16; }
+  50% { fill-opacity: 0.28; }
+}
+
+/* Interactive Data Nodes & Hover Crosshairs */
+.chart-node {
+  fill: #FFFFFF;
+  stroke: var(--primary-cyan);
+  stroke-width: 2.5;
+  cursor: pointer;
+  transition: r var(--transition-fast), stroke-width var(--transition-fast);
+}
+
+.chart-node:hover {
+  r: 6;
+  stroke-width: 3.5;
+  filter: drop-shadow(0 0 8px #FFFFFF);
+}
+
+.chart-node-predicted {
+  fill: #0B1728;
+  stroke: var(--secondary-violet);
+  stroke-width: 2;
+}
+
+.chart-crosshair {
+  stroke: rgba(150, 200, 230, 0.25);
+  stroke-width: 1;
+  stroke-dasharray: 3 3;
+  pointer-events: none;
+}
+
+/* Floating Chart Tooltip */
+.chart-tooltip {
+  position: absolute;
+  padding: 8px 12px;
+  background: rgba(11, 23, 40, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-highlight);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), var(--glow-cyan);
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-main);
+  z-index: 50;
+  display: none;
+  transform: translate(-50%, -120%);
+  white-space: nowrap;
+}
+
+.chart-tooltip.visible {
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   CIRCULAR DONUT RISK GAUGE (Crisis & Risk Page Centerpiece)
+   -------------------------------------------------------------------------- */
+.risk-gauge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  position: relative;
+}
+
+.gauge-svg-wrap {
+  width: 240px;
+  height: 240px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gauge-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.gauge-bg-circle {
+  fill: none;
+  stroke: rgba(20, 42, 66, 0.6);
+  stroke-width: 16;
+}
+
+.gauge-fill-circle {
+  fill: none;
+  stroke: url(#riskGradient);
+  stroke-width: 16;
+  stroke-linecap: round;
+  stroke-dasharray: 565.48; /* 2 * PI * 90 */
+  stroke-dashoffset: 124.4; /* 78% fill */
+  transition: stroke-dashoffset 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  filter: drop-shadow(0 0 12px rgba(255, 92, 122, 0.6));
+}
+
+.gauge-fill-circle.pulse-active {
+  animation: pulseGauge 2.4s infinite ease-in-out;
+}
+
+@keyframes pulseGauge {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(255, 92, 122, 0.5));
+    stroke-width: 16;
+  }
+  50% {
+    filter: drop-shadow(0 0 22px rgba(255, 92, 122, 0.85));
+    stroke-width: 17.5;
+  }
+}
+
+.gauge-center-content {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  pointer-events: none;
+}
+
+.gauge-percent {
+  font-family: var(--font-mono);
+  font-size: 3.2rem;
+  font-weight: 800;
+  color: var(--critical-red);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-shadow: 0 0 20px rgba(255, 92, 122, 0.5);
+}
+
+.gauge-status-badge {
+  margin-top: 4px;
+}
+
+.gauge-risk-sub {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   HORIZONTAL RISK TIMELINE (Crisis Progression)
+   -------------------------------------------------------------------------- */
+.risk-timeline-card {
+  padding: 24px;
+  margin-top: 20px;
+}
+
+.risk-timeline-track {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  margin: 30px 10px 15px;
+}
+
+.risk-timeline-track::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 15px;
+  height: 3px;
+  background: linear-gradient(90deg, 
+    var(--warning-amber) 0%, 
+    #ff8557 35%, 
+    var(--critical-red) 70%, 
+    #b3002d 100%
+  );
+  z-index: 1;
+}
+
+.timeline-checkpoint {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.checkpoint-node {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-deep-navy);
+  border: 2px solid var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-main);
+  transition: all var(--transition-fast);
+}
+
+.checkpoint-node.active-now {
+  border-color: var(--warning-amber);
+  color: var(--warning-amber);
+  box-shadow: 0 0 12px var(--warning-amber);
+}
+
+.checkpoint-node.active-crisis {
+  border-color: var(--critical-red);
+  color: #FFFFFF;
+  background: var(--critical-red);
+  box-shadow: 0 0 16px var(--critical-red);
+  animation: pulseRed 1.8s infinite ease-in-out;
+}
+
+.checkpoint-step {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-highlight);
+}
+
+.checkpoint-time {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.checkpoint-label {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  max-width: 140px;
+  margin-top: 4px;
+}

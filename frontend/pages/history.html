@@ -1,0 +1,78 @@
+<!-- HISTORY & LOGS PAGE TEMPLATE -->
+<div class="page-view" id="view-history">
+  <div style="margin-bottom: 24px; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+    <div>
+      <div class="tech-label" style="color: var(--primary-cyan); margin-bottom: 4px;">STATION BLACKBOX RECORD</div>
+      <h1 style="font-size: 1.6rem; letter-spacing: -0.02em;">SYSTEM HISTORY & AUDIT LOGS</h1>
+      <p style="font-size: 0.88rem; margin-top: 2px;">Comprehensive chronological telemetry logs, AI inference events, and operator actions.</p>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <button class="btn btn-secondary btn-sm" id="btn-export-logs">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export Audit Log (JSON)
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="glass-card" style="padding: 18px 22px; margin-bottom: 24px;">
+    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 16px; align-items: end;">
+      <!-- Search Input -->
+      <div>
+        <label class="form-label" for="history-search-input">Search Events or Logs</label>
+        <input type="text" class="polar-input" id="history-search-input" placeholder="Search keywords, IDs, or equipment...">
+      </div>
+
+      <!-- Category Filter -->
+      <div>
+        <label class="form-label" for="history-category-select">Event Category</label>
+        <select class="polar-select" id="history-category-select">
+          <option value="ALL">All Categories</option>
+          <option value="Safety Guardian">Safety Guardian</option>
+          <option value="Risk Engine">Risk Engine</option>
+          <option value="Prediction">Prediction</option>
+          <option value="Loads">Loads</option>
+          <option value="Telemetry">Telemetry</option>
+          <option value="Digital Twin">Digital Twin</option>
+        </select>
+      </div>
+
+      <!-- Severity Filter -->
+      <div>
+        <label class="form-label" for="history-severity-select">Severity Level</label>
+        <select class="polar-select" id="history-severity-select">
+          <option value="ALL">All Severities</option>
+          <option value="CRITICAL">Critical</option>
+          <option value="WARNING">Warning</option>
+          <option value="INFO">Info</option>
+        </select>
+      </div>
+
+      <!-- Reset Filters Button -->
+      <div>
+        <button class="btn btn-secondary" id="btn-reset-history-filters" style="width: 100%;">
+          Reset Filters
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- History Logs Table -->
+  <div class="table-container">
+    <table class="data-table" id="history-table">
+      <thead>
+        <tr>
+          <th>LOG ID & TIMESTAMP</th>
+          <th>EVENT TITLE</th>
+          <th>CATEGORY</th>
+          <th>SEVERITY</th>
+          <th>DETAILS</th>
+          <th>OPERATOR / ENGINE</th>
+        </tr>
+      </thead>
+      <tbody id="history-table-body">
+        <!-- Injected dynamically by history.js -->
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,390 @@
+<!-- OVERVIEW PAGE TEMPLATE -->
+<div class="page-view" id="view-overview">
+  <div style="margin-bottom: 20px; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+    <div>
+      <div class="tech-label" style="color: var(--primary-cyan); margin-bottom: 4px;">POLAR STATION COMMAND CENTER</div>
+      <h1 style="font-size: 1.6rem; letter-spacing: -0.02em;">POLAR STATION ENERGY OVERVIEW</h1>
+      <p style="font-size: 0.88rem; margin-top: 2px;">Real-time station energy telemetry, microgrid bus flow, and AI intelligence.</p>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span class="badge badge-live" id="overview-telemetry-badge"><span class="status-dot live"></span> REAL-TIME TELEMETRY</span>
+      <button class="btn btn-secondary btn-sm" id="btn-refresh-overview">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
+        Sync Telemetry
+      </button>
+    </div>
+  </div>
+
+  <!-- Dynamic Station Health / Crisis Risk Banner -->
+  <div id="overview-risk-banner" style="margin-bottom: 20px;"></div>
+
+  <!-- 8 KPI Metrics Grid -->
+  <div class="kpi-grid" style="margin-bottom: 24px;">
+    <div class="kpi-card glass-card">
+      <div class="kpi-header">
+        <span class="kpi-title">CURRENT DEMAND</span>
+        <div class="kpi-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value-row">
+        <span class="kpi-num" id="kpi-current-demand">90.0</span>
+        <span class="kpi-unit">kW</span>
+      </div>
+      <div class="kpi-footer">
+        <span>Nominal: 75.0 kW</span>
+        <span class="kpi-trend up-red">▲ Net Load</span>
+      </div>
+    </div>
+
+    <div class="kpi-card glass-card">
+      <div class="kpi-header">
+        <span class="kpi-title">PREDICTED DEMAND</span>
+        <div class="kpi-icon" style="color: var(--secondary-violet);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value-row">
+        <span class="kpi-num" style="color: #d1b8ff;" id="kpi-predicted-demand">108.0</span>
+        <span class="kpi-unit">kW</span>
+      </div>
+      <div class="kpi-footer">
+        <span>Horizon: +1 Hour</span>
+        <span class="kpi-trend up-red">↑ XGBoost Model</span>
+      </div>
+    </div>
+
+    <div class="kpi-card glass-card">
+      <div class="kpi-header">
+        <span class="kpi-title">RENEWABLE NOW</span>
+        <div class="kpi-icon" style="color: var(--success-aurora);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value-row">
+        <span class="kpi-num" style="color: var(--success-aurora);" id="kpi-renewable-now">25.0</span>
+        <span class="kpi-unit">kW</span>
+      </div>
+      <div class="kpi-footer">
+        <span>Turbine Field 02</span>
+        <span class="kpi-trend up-green">Wind Telemetry</span>
+      </div>
+    </div>
+
+    <div class="kpi-card glass-card">
+      <div class="kpi-header">
+        <span class="kpi-title">RENEWABLE FORECAST</span>
+        <div class="kpi-icon" style="color: var(--warning-amber);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value-row">
+        <span class="kpi-num" style="color: var(--warning-amber);" id="kpi-renewable-forecast">22.0</span>
+        <span class="kpi-unit">kW</span>
+      </div>
+      <div class="kpi-footer">
+        <span>Horizon: +1 Hour</span>
+        <span class="kpi-trend down-amber">↓ XGBoost Model</span>
+      </div>
+    </div>
+
+    <div class="kpi-card glass-card">
+      <div class="kpi-header">
+        <span class="kpi-title">BATTERY SOC</span>
+        <div class="kpi-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="13" x2="23" y2="11"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value-row">
+        <span class="kpi-num" id="kpi-battery-soc">35</span>
+        <span class="kpi-unit">%</span>
+      </div>
+      <div class="kpi-footer">
+        <span>Available: <strong class="mono-val" style="color: var(--text-main);">175 kWh</strong></span>
+        <span class="badge badge-warning" style="padding: 1px 6px;">Buffer 20%</span>
+      </div>
+    </div>
+
+    <div class="kpi-card glass-card">
+      <div class="kpi-header">
+        <span class="kpi-title">SURVIVAL TIME</span>
+        <div class="kpi-icon" style="color: var(--primary-cyan);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value-row">
+        <span class="kpi-num mono-val" id="kpi-survival-time">~8.0</span>
+        <span class="kpi-unit">h</span>
+      </div>
+      <div class="kpi-footer">
+        <span>Battery Only: 2.7 h</span>
+        <span style="font-family: var(--font-mono); color: var(--success-aurora);">Gen: Standby</span>
+      </div>
+    </div>
+
+    <div class="kpi-card glass-card" style="border-color: rgba(255, 92, 122, 0.35);">
+      <div class="kpi-header">
+        <span class="kpi-title" style="color: var(--critical-red);">ENERGY RISK</span>
+        <div class="kpi-icon" style="color: var(--critical-red);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value-row">
+        <span class="kpi-num" style="color: var(--critical-red);" id="kpi-energy-risk">HIGH</span>
+      </div>
+      <div class="kpi-footer">
+        <span>Threat Engine</span>
+        <span class="tech-label" style="color: var(--critical-red); font-weight: 700;">Shortage Deficit</span>
+      </div>
+    </div>
+
+    <div class="kpi-card glass-card">
+      <div class="kpi-header">
+        <span class="kpi-title">CRITICAL LOADS</span>
+        <div class="kpi-icon" style="color: var(--primary-cyan);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+      </div>
+      <div class="kpi-value-row">
+        <span class="kpi-num" id="kpi-critical-loads-count">2</span>
+        <span class="kpi-unit">protected</span>
+      </div>
+      <div class="kpi-footer">
+        <span>Active: <strong class="mono-val" style="color: var(--text-highlight);">43 kW</strong></span>
+        <span class="badge badge-safe" style="padding: 1px 6px;">100% Protected</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Microgrid Power Bus System Flow Visualization -->
+  <div class="glass-card" style="padding: 22px 24px; margin-bottom: 24px; border-left: 4px solid var(--primary-cyan);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+      <div>
+        <span class="tech-label" style="color: var(--primary-cyan);">POWER BUS SYSTEM FLOW</span>
+        <h3 style="font-size: 1.15rem; color: var(--text-highlight); margin-top: 2px;">Station Microgrid Energy Flow</h3>
+      </div>
+      <span class="badge badge-cyan" id="bus-status-badge">MICROGRID OPERATIONAL</span>
+    </div>
+
+    <div class="energy-flow-grid" style="display: grid; grid-template-columns: 1.1fr 40px 1.2fr 40px 1.4fr; gap: 14px; align-items: center; text-align: center;">
+      <div style="background: rgba(7, 17, 31, 0.7); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div class="tech-label" style="color: var(--success-aurora);">RENEWABLE GENERATION</div>
+        <div class="mono-val" style="font-size: 1.6rem; font-weight: 800; color: var(--success-aurora); margin-top: 4px;" id="bus-val-renewable">25.0 kW</div>
+        <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 6px;">
+          Wind: <span id="bus-val-wind" style="color: var(--text-main);">25.0 kW</span> | Solar: <span id="bus-val-solar" style="color: var(--text-main);">0.0 kW</span>
+        </div>
+      </div>
+      <div style="font-size: 1.5rem; color: var(--success-aurora);">➔</div>
+      <div style="background: linear-gradient(135deg, rgba(85, 214, 255, 0.15), rgba(139, 124, 255, 0.15)); padding: 18px 14px; border-radius: var(--radius-sm); border: 1px solid var(--primary-cyan); box-shadow: var(--shadow-glow-cyan);">
+        <div class="tech-label" style="color: var(--primary-cyan); font-weight: 700;">STATION ENERGY BUS</div>
+        <div class="mono-val" style="font-size: 1.7rem; font-weight: 800; color: var(--text-highlight); margin-top: 4px;" id="bus-val-total">25.0 kW</div>
+        <div style="font-size: 0.74rem; color: var(--text-secondary); margin-top: 4px;">400V 3-Phase Polar Bus</div>
+      </div>
+      <div style="font-size: 1.5rem; color: var(--primary-cyan);">➔</div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="background: rgba(7, 17, 31, 0.7); padding: 8px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-highlight);">Station Demand</span>
+          <span class="mono-val" style="color: #FF8557; font-weight: 700;" id="bus-val-demand">90.0 kW</span>
+        </div>
+        <div style="background: rgba(7, 17, 31, 0.7); padding: 8px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-highlight);">Battery Storage</span>
+          <span class="mono-val" style="color: var(--warning-amber); font-weight: 700;" id="bus-val-battery">-65.0 kW</span>
+        </div>
+        <div style="background: rgba(7, 17, 31, 0.7); padding: 8px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between;">
+          <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-highlight);">Generator</span>
+          <span class="badge badge-safe" id="bus-val-generator" style="font-size: 0.65rem;">AVAILABLE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prominent AI Energy Intelligence Panel -->
+  <div class="glass-card" style="padding: 22px 24px; margin-bottom: 24px; border-left: 4px solid var(--secondary-violet);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+      <div>
+        <span class="tech-label" style="color: var(--secondary-violet);">DECISION SUPPORT CORE</span>
+        <h3 style="font-size: 1.15rem; color: var(--text-highlight); margin-top: 2px;">AI ENERGY INTELLIGENCE</h3>
+      </div>
+      <span class="badge badge-violet">REAL ML MODELS ACTIVE</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 18px;">
+      <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div class="tech-label">PREDICTED DEMAND</div>
+        <div class="mono-val" style="font-size: 1.4rem; font-weight: 800; color: #d1b8ff; margin-top: 2px;" id="ai-val-pred-demand">108.0 kW</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted);">XGBoost Regressor</div>
+      </div>
+
+      <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div class="tech-label">PREDICTED RENEWABLE</div>
+        <div class="mono-val" style="font-size: 1.4rem; font-weight: 800; color: var(--warning-amber); margin-top: 2px;" id="ai-val-pred-ren">22.0 kW</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted);">XGBoost Regressor</div>
+      </div>
+
+      <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div class="tech-label">EXPECTED BALANCE</div>
+        <div class="mono-val" style="font-size: 1.4rem; font-weight: 800; color: var(--critical-red); margin-top: 2px;" id="ai-val-balance">-86.0 kW</div>
+        <div style="font-size: 0.7rem; color: var(--text-muted);">Deficit Crossover</div>
+      </div>
+
+      <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div class="tech-label">ANOMALY DETECTOR</div>
+        <div style="margin-top: 6px;"><span class="badge badge-safe" id="ai-val-anomaly">NOMINAL</span></div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">Isolation Forest</div>
+      </div>
+
+      <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div class="tech-label">OVERALL RISK LEVEL</div>
+        <div style="margin-top: 6px;"><span class="badge badge-high" id="ai-val-risk">HIGH</span></div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">Backend Decision Engine</div>
+      </div>
+    </div>
+
+    <div style="background: rgba(16, 31, 51, 0.8); border: 1px solid var(--border-highlight); border-radius: var(--radius-sm); padding: 14px 18px;">
+      <div class="tech-label" style="color: var(--primary-cyan); margin-bottom: 4px;">RECOMMENDED ACTION</div>
+      <p style="font-size: 0.88rem; color: var(--text-highlight); line-height: 1.45;" id="ai-val-recommendation">
+        Reduce or defer non-critical electrical loads and preserve battery capacity for critical life support systems.
+      </p>
+    </div>
+  </div>
+
+  <!-- Charts Row 1: Two Column Layout -->
+  <div class="charts-grid-2col" style="margin-bottom: 24px;">
+    <div class="chart-card glass-card">
+      <div class="chart-card-header">
+        <div class="chart-title-group">
+          <span class="tech-label" style="color: var(--primary-cyan);">PREDICTIVE FORECASTING</span>
+          <h3 class="chart-title">Demand Forecast (Next 6 Hours)</h3>
+          <span class="chart-subtitle">Actual consumption vs AI predicted surge</span>
+        </div>
+        <div class="chart-legend">
+          <div class="chart-legend-item"><span class="legend-line actual"></span> Actual (90 kW)</div>
+          <div class="chart-legend-item"><span class="legend-line predicted"></span> Predicted</div>
+          <div class="chart-legend-item"><span class="legend-line peak"></span> Peak Limit (115 kW)</div>
+        </div>
+      </div>
+      <div class="chart-container" id="overview-demand-chart"></div>
+    </div>
+
+    <div class="chart-card glass-card">
+      <div class="chart-card-header">
+        <div class="chart-title-group">
+          <span class="tech-label" style="color: var(--critical-red);">DEFICIT PROJECTION</span>
+          <h3 class="chart-title">Available Supply vs Predicted Demand</h3>
+          <span class="chart-subtitle">Shaded area highlights deficit crossover window</span>
+        </div>
+        <div class="chart-legend">
+          <div class="chart-legend-item"><span class="legend-line supply"></span> Available Supply</div>
+          <div class="chart-legend-item"><span class="legend-line predicted"></span> Demand</div>
+        </div>
+      </div>
+      <div class="chart-container" id="overview-supply-demand-chart"></div>
+    </div>
+  </div>
+
+  <!-- Row 2: Battery Reserve & Station Load Breakdown & Alert Center -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+    <div class="chart-card glass-card">
+      <div class="chart-card-header">
+        <div class="chart-title-group">
+          <span class="tech-label" style="color: var(--warning-amber);">ENERGY STORAGE RESERVE</span>
+          <h3 class="chart-title">Battery SOC Over Time</h3>
+          <span class="chart-subtitle">Discharge curve vs 20% safe buffer</span>
+        </div>
+      </div>
+      <div class="chart-container" id="overview-battery-chart" style="height: 180px;"></div>
+    </div>
+
+    <div class="glass-card" style="padding: 20px 22px;">
+      <div class="chart-card-header" style="margin-bottom: 8px;">
+        <div class="chart-title-group">
+          <span class="tech-label" style="color: var(--secondary-violet);">GRID ALLOCATION</span>
+          <h3 class="chart-title">Station Load Distribution</h3>
+        </div>
+        <a href="#loads" class="tech-label" style="color: var(--primary-cyan); text-decoration: underline;">View All →</a>
+      </div>
+
+      <div class="load-summary-bar-wrapper">
+        <div class="load-stacked-bar">
+          <div class="bar-segment critical" style="width: 50%;" title="Critical: 43 kW (50%)"></div>
+          <div class="bar-segment essential" style="width: 39%;" title="Essential: 37 kW (39%)"></div>
+          <div class="bar-segment non-critical" style="width: 11%;" title="Non-Critical: 10 kW (11%)"></div>
+        </div>
+        <div class="load-legend">
+          <div class="legend-item"><span class="legend-color-dot critical"></span> CRITICAL: 43 kW</div>
+          <div class="legend-item"><span class="legend-color-dot essential"></span> ESSENTIAL: 37 kW</div>
+          <div class="legend-item"><span class="legend-color-dot non-critical"></span> NON-CRITICAL: 10 kW</div>
+        </div>
+      </div>
+
+      <div class="overview-equipment-list">
+        <div class="equipment-item-row">
+          <div class="eq-left">
+            <span class="status-dot critical"></span>
+            <div>
+              <div class="eq-name">Heating Unit 01</div>
+              <div class="eq-meta">Habitat Quarters Main</div>
+            </div>
+          </div>
+          <div class="eq-right">
+            <span class="eq-power">35 kW</span>
+            <span class="badge badge-critical">CRITICAL</span>
+          </div>
+        </div>
+
+        <div class="equipment-item-row">
+          <div class="eq-left">
+            <span class="status-dot warning"></span>
+            <div>
+              <div class="eq-name">Laboratory Core</div>
+              <div class="eq-meta">Cryo & Atmospheric</div>
+            </div>
+          </div>
+          <div class="eq-right">
+            <span class="eq-power">25 kW</span>
+            <span class="badge badge-cyan">ESSENTIAL</span>
+          </div>
+        </div>
+
+        <div class="equipment-item-row">
+          <div class="eq-left">
+            <span class="status-dot live"></span>
+            <div>
+              <div class="eq-name">Facility Lighting</div>
+              <div class="eq-meta">Walkways & External</div>
+            </div>
+          </div>
+          <div class="eq-right">
+            <span class="eq-power">12 kW</span>
+            <span class="badge badge-cyan">ESSENTIAL</span>
+          </div>
+        </div>
+
+        <div class="equipment-item-row">
+          <div class="eq-left">
+            <span class="status-dot live"></span>
+            <div>
+              <div class="eq-name">Auxiliary Equipment</div>
+              <div class="eq-meta">Water Heater & Pumps</div>
+            </div>
+          </div>
+          <div class="eq-right">
+            <span class="eq-power">10 kW</span>
+            <span class="badge badge-violet">NON-CRITICAL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card" style="padding: 20px 22px;">
+      <div class="chart-card-header" style="margin-bottom: 12px;">
+        <div class="chart-title-group">
+          <span class="tech-label" style="color: var(--critical-red);">ACTIVE SIGNALS</span>
+          <h3 class="chart-title">Alert Center</h3>
+        </div>
+        <span class="badge badge-critical">4 ACTIVE</span>
+      </div>
+      <div id="overview-alert-list"></div>
+    </div>
+  </div>
+</div>

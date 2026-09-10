@@ -1,0 +1,173 @@
+/* ==========================================================================
+   ECOALERT POLAR - RESPONSIVE STYLES
+   Breakpoints for Desktop, Tablet Drawer & Mobile Command Center
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   LARGE SCREENS (1440px and above)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1440px) {
+  .page-container {
+    padding: 28px 36px 48px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   STANDARD DESKTOP / LAPTOP (1024px to 1339px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1339px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .banner-metrics {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   TABLET VIEW (768px to 1023px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  :root {
+    --sidebar-width: 250px;
+  }
+
+  .charts-grid-2col {
+    grid-template-columns: 1fr;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Collapsible Sidebar Drawer */
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.7);
+  }
+
+  .sidebar.drawer-open {
+    transform: translateX(0);
+  }
+
+  /* Drawer Backdrop */
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(3, 7, 14, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 95;
+  }
+
+  .sidebar-backdrop.active {
+    display: block;
+  }
+
+  .global-header {
+    padding: 0 18px;
+  }
+
+  .page-container {
+    padding: 20px 18px 36px;
+  }
+
+  .header-telemetry-item:nth-child(2) {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   MOBILE SCREENS (Under 768px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .global-header {
+    padding: 0 14px;
+    height: 60px;
+  }
+
+  .header-page-title {
+    font-size: 1.05rem;
+  }
+
+  .station-context-strip {
+    padding: 8px 14px;
+  }
+
+  .page-container {
+    padding: 16px 14px 32px;
+  }
+
+  .station-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .operator-profile {
+    display: none;
+  }
+
+  .header-telemetry-item {
+    display: none;
+  }
+
+  .risk-timeline-track {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+    padding-left: 20px;
+  }
+
+  .risk-timeline-track::before {
+    left: 35px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    height: 100%;
+  }
+
+  .timeline-checkpoint {
+    flex-direction: row;
+    gap: 16px;
+    text-align: left;
+  }
+
+  .checkpoint-label {
+    max-width: none;
+  }
+
+  .modal-dialog {
+    max-width: 100%;
+    margin: 10px;
+  }
+
+  .toast-container {
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .toast {
+    min-width: 0;
+    max-width: 100%;
+  }
+}

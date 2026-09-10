@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="EcoAlert Polar - AI-powered energy intelligence, predictive demand forecasting, crisis detection, and decision-support command center for Antarctic polar research stations.">
+  <meta name="keywords" content="EcoAlert Polar, Energy Intelligence, Antarctic Station, Microgrid, Digital Twin, Predictive Energy, Polar Command Center">
+  <meta name="theme-color" content="#07111F">
+  
+  <title>EcoAlert Polar | AI Energy Intelligence Command Center</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/logo/logo.svg">
+
+  <!-- Core Polar Design System Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/charts.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <!-- Main Application Container -->
+  <div class="app-container" id="app">
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
+
+    <!-- Left Sticky Sidebar Navigation -->
+    <aside id="sidebar" class="sidebar" aria-label="Main Navigation"></aside>
+
+    <!-- Main Viewport Content Area -->
+    <div class="main-wrapper">
+      <!-- Global Mission Control Header -->
+      <header id="global-header" class="global-header"></header>
+
+      <!-- Global Station Context Telemetry Strip -->
+      <div id="station-context-strip" class="station-context-strip"></div>
+
+      <!-- Active Page Content Shell -->
+      <main id="page-container" class="page-container">
+
+        <!-- ===================================================================
+             PAGE 1: OVERVIEW COMMAND CENTER
+             =================================================================== -->
+        <div class="page-view active" id="view-overview">
+          <div style="margin-bottom: 20px; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <div class="tech-label" style="color: var(--primary-cyan); margin-bottom: 4px;">POLAR STATION COMMAND CENTER</div>
+              <h1 style="font-size: 1.6rem; letter-spacing: -0.02em;">POLAR STATION ENERGY OVERVIEW</h1>
+              <p style="font-size: 0.88rem; margin-top: 2px;">Real-time station energy telemetry, microgrid bus flow, and AI intelligence.</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="badge badge-live" id="overview-telemetry-badge"><span class="status-dot live"></span> REAL-TIME TELEMETRY</span>
+              <button class="btn btn-secondary btn-sm" id="btn-refresh-overview">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/></svg>
+                Sync Telemetry
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Station Health / Crisis Risk Banner -->
+          <div id="overview-risk-banner" style="margin-bottom: 20px;"></div>
+
+          <!-- 8 KPI Metrics Grid -->
+          <div class="kpi-grid" style="margin-bottom: 24px;">
+            <div class="kpi-card glass-card">
+              <div class="kpi-header">
+                <span class="kpi-title">CURRENT DEMAND</span>
+                <div class="kpi-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-num" id="kpi-current-demand">90.0</span>
+                <span class="kpi-unit">kW</span>
+              </div>
+              <div class="kpi-footer">
+                <span>Nominal: 75.0 kW</span>
+                <span class="kpi-trend up-red">▲ Net Load</span>
+              </div>
+            </div>
+
+            <div class="kpi-card glass-card">
+              <div class="kpi-header">
+                <span class="kpi-title">PREDICTED DEMAND</span>
+                <div class="kpi-icon" style="color: var(--secondary-violet);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+                </div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-num" style="color: #d1b8ff;" id="kpi-predicted-demand">108.0</span>
+                <span class="kpi-unit">kW</span>
+              </div>
+              <div class="kpi-footer">
+                <span>Horizon: +1 Hour</span>
+                <span class="kpi-trend up-red">↑ XGBoost Model</span>
+              </div>
+            </div>
+
+            <div class="kpi-card glass-card">
+              <div class="kpi-header">
+                <span class="kpi-title">RENEWABLE NOW</span>
+                <div class="kpi-icon" style="color: var(--success-aurora);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
+                </div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-num" style="color: var(--success-aurora);" id="kpi-renewable-now">25.0</span>
+                <span class="kpi-unit">kW</span>
+              </div>
+              <div class="kpi-footer">
+                <span>Turbine Field 02</span>
+                <span class="kpi-trend up-green">Wind Telemetry</span>
+              </div>
+            </div>
+
+            <div class="kpi-card glass-card">
+              <div class="kpi-header">
+                <span class="kpi-title">RENEWABLE FORECAST</span>
+                <div class="kpi-icon" style="color: var(--warning-amber);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2"/></svg>
+                </div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-num" style="color: var(--warning-amber);" id="kpi-renewable-forecast">22.0</span>
+                <span class="kpi-unit">kW</span>
+              </div>
+              <div class="kpi-footer">
+                <span>Horizon: +1 Hour</span>
+                <span class="kpi-trend down-amber">↓ XGBoost Model</span>
+              </div>
+            </div>
+
+            <div class="kpi-card glass-card">
+              <div class="kpi-header">
+                <span class="kpi-title">BATTERY SOC</span>
+                <div class="kpi-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="13" x2="23" y2="11"/></svg>
+                </div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-num" id="kpi-battery-soc">35</span>
+                <span class="kpi-unit">%</span>
+              </div>
+              <div class="kpi-footer">
+                <span>Available: <strong class="mono-val" style="color: var(--text-main);">175 kWh</strong></span>
+                <span class="badge badge-warning" style="padding: 1px 6px;">Buffer 20%</span>
+              </div>
+            </div>
+
+            <div class="kpi-card glass-card">
+              <div class="kpi-header">
+                <span class="kpi-title">SURVIVAL TIME</span>
+                <div class="kpi-icon" style="color: var(--primary-cyan);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-num mono-val" id="kpi-survival-time">~8.0</span>
+                <span class="kpi-unit">h</span>
+              </div>
+              <div class="kpi-footer">
+                <span>Battery Only: 2.7 h</span>
+                <span style="font-family: var(--font-mono); color: var(--success-aurora);">Gen: Standby</span>
+              </div>
+            </div>
+
+            <div class="kpi-card glass-card" style="border-color: rgba(255, 92, 122, 0.35);">
+              <div class="kpi-header">
+                <span class="kpi-title" style="color: var(--critical-red);">ENERGY RISK</span>
+                <div class="kpi-icon" style="color: var(--critical-red);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/></svg>
+                </div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-num" style="color: var(--critical-red);" id="kpi-energy-risk">HIGH</span>
+              </div>
+              <div class="kpi-footer">
+                <span>Threat Engine</span>
+                <span class="tech-label" style="color: var(--critical-red); font-weight: 700;">Shortage Deficit</span>
+              </div>
+            </div>
+
+            <div class="kpi-card glass-card">
+              <div class="kpi-header">
+                <span class="kpi-title">CRITICAL LOADS</span>
+                <div class="kpi-icon" style="color: var(--primary-cyan);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+              </div>
+              <div class="kpi-value-row">
+                <span class="kpi-num" id="kpi-critical-loads-count">2</span>
+                <span class="kpi-unit">protected</span>
+              </div>
+              <div class="kpi-footer">
+                <span>Active: <strong class="mono-val" style="color: var(--text-highlight);">43 kW</strong></span>
+                <span class="badge badge-safe" style="padding: 1px 6px;">100% Protected</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Microgrid Power Bus System Flow Visualization -->
+          <div class="glass-card" style="padding: 22px 24px; margin-bottom: 24px; border-left: 4px solid var(--primary-cyan);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+              <div>
+                <span class="tech-label" style="color: var(--primary-cyan);">POWER BUS SYSTEM FLOW</span>
+                <h3 style="font-size: 1.15rem; color: var(--text-highlight); margin-top: 2px;">Station Microgrid Energy Flow</h3>
+              </div>
+              <span class="badge badge-cyan" id="bus-status-badge">MICROGRID OPERATIONAL</span>
+            </div>
+
+            <div class="energy-flow-grid" style="display: grid; grid-template-columns: 1.1fr 40px 1.2fr 40px 1.4fr; gap: 14px; align-items: center; text-align: center;">
+              <!-- RENEWABLE GENERATION -->
+              <div style="background: rgba(7, 17, 31, 0.7); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <div class="tech-label" style="color: var(--success-aurora);">RENEWABLE GENERATION</div>
+                <div class="mono-val" style="font-size: 1.6rem; font-weight: 800; color: var(--success-aurora); margin-top: 4px;" id="bus-val-renewable">25.0 kW</div>
+                <div style="font-size: 0.74rem; color: var(--text-muted); margin-top: 6px;">
+                  Wind: <span id="bus-val-wind" style="color: var(--text-main);">25.0 kW</span> | Solar: <span id="bus-val-solar" style="color: var(--text-main);">0.0 kW</span>
+                </div>
+              </div>
+
+              <!-- ARROW 1 -->
+              <div style="font-size: 1.5rem; color: var(--success-aurora);">➔</div>
+
+              <!-- CENTRAL ENERGY BUS -->
+              <div style="background: linear-gradient(135deg, rgba(85, 214, 255, 0.15), rgba(139, 124, 255, 0.15)); padding: 18px 14px; border-radius: var(--radius-sm); border: 1px solid var(--primary-cyan); box-shadow: var(--shadow-glow-cyan);">
+                <div class="tech-label" style="color: var(--primary-cyan); font-weight: 700;">STATION ENERGY BUS</div>
+                <div class="mono-val" style="font-size: 1.7rem; font-weight: 800; color: var(--text-highlight); margin-top: 4px;" id="bus-val-total">25.0 kW</div>
+                <div style="font-size: 0.74rem; color: var(--text-secondary); margin-top: 4px;">400V 3-Phase Polar Bus</div>
+              </div>
+
+              <!-- ARROW 2 -->
+              <div style="font-size: 1.5rem; color: var(--primary-cyan);">➔</div>
+
+              <!-- LOADS / BATTERY / GENERATOR -->
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="background: rgba(7, 17, 31, 0.7); padding: 8px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between;">
+                  <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-highlight);">Station Demand</span>
+                  <span class="mono-val" style="color: #FF8557; font-weight: 700;" id="bus-val-demand">90.0 kW</span>
+                </div>
+                <div style="background: rgba(7, 17, 31, 0.7); padding: 8px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between;">
+                  <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-highlight);">Battery Storage</span>
+                  <span class="mono-val" style="color: var(--warning-amber); font-weight: 700;" id="bus-val-battery">-65.0 kW</span>
+                </div>
+                <div style="background: rgba(7, 17, 31, 0.7); padding: 8px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between;">
+                  <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-highlight);">Generator</span>
+                  <span class="badge badge-safe" id="bus-val-generator" style="font-size: 0.65rem;">AVAILABLE</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Prominent AI Energy Intelligence Panel -->
+          <div class="glass-card" style="padding: 22px 24px; margin-bottom: 24px; border-left: 4px solid var(--secondary-violet);">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+              <div>
+                <span class="tech-label" style="color: var(--secondary-violet);">DECISION SUPPORT CORE</span>
+                <h3 style="font-size: 1.15rem; color: var(--text-highlight); margin-top: 2px;">AI ENERGY INTELLIGENCE</h3>
+              </div>
+              <span class="badge badge-violet">REAL ML MODELS ACTIVE</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 18px;">
+              <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <div class="tech-label">PREDICTED DEMAND</div>
+                <div class="mono-val" style="font-size: 1.4rem; font-weight: 800; color: #d1b8ff; margin-top: 2px;" id="ai-val-pred-demand">108.0 kW</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">XGBoost Regressor</div>
+              </div>
+
+              <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <div class="tech-label">PREDICTED RENEWABLE</div>
+                <div class="mono-val" style="font-size: 1.4rem; font-weight: 800; color: var(--warning-amber); margin-top: 2px;" id="ai-val-pred-ren">22.0 kW</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">XGBoost Regressor</div>
+              </div>
+
+              <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <div class="tech-label">EXPECTED BALANCE</div>
+                <div class="mono-val" style="font-size: 1.4rem; font-weight: 800; color: var(--critical-red); margin-top: 2px;" id="ai-val-balance">-86.0 kW</div>
+                <div style="font-size: 0.7rem; color: var(--text-muted);">Deficit Crossover</div>
+              </div>
+
+              <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <div class="tech-label">ANOMALY DETECTOR</div>
+                <div style="margin-top: 6px;"><span class="badge badge-safe" id="ai-val-anomaly">NOMINAL</span></div>
+                <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">Isolation Forest</div>
+              </div>
+
+              <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <div class="tech-label">OVERALL RISK LEVEL</div>
+                <div style="margin-top: 6px;"><span class="badge badge-high" id="ai-val-risk">HIGH</span></div>
+                <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">Backend Decision Engine</div>
+              </div>
+            </div>
+
+            <div style="background: rgba(16, 31, 51, 0.8); border: 1px solid var(--border-highlight); border-radius: var(--radius-sm); padding: 14px 18px;">
+              <div class="tech-label" style="color: var(--primary-cyan); margin-bottom: 4px;">RECOMMENDED ACTION</div>
+              <p style="font-size: 0.88rem; color: var(--text-highlight); line-height: 1.45;" id="ai-val-recommendation">
+                Reduce or defer non-critical electrical loads and preserve battery capacity for critical life support systems.
+              </p>
+            </div>
+          </div>
+
+          <!-- Charts Row 1: Two Column Layout -->
+          <div class="charts-grid-2col" style="margin-bottom: 24px;">
+            <div class="chart-card glass-card">
+              <div class="chart-card-header">
+                <div class="chart-title-group">
+                  <span class="tech-label" style="color: var(--primary-cyan);">PREDICTIVE FORECASTING</span>
+                  <h3 class="chart-title">Demand Forecast (Next 6 Hours)</h3>
+                  <span class="chart-subtitle">Actual consumption vs AI predicted surge</span>
+                </div>
+                <div class="chart-legend">
+                  <div class="chart-legend-item"><span class="legend-line actual"></span> Actual (90 kW)</div>
+                  <div class="chart-legend-item"><span class="legend-line predicted"></span> Predicted</div>
+                  <div class="chart-legend-item"><span class="legend-line peak"></span> Peak Limit (115 kW)</div>
+                </div>
+              </div>
+              <div class="chart-container" id="overview-demand-chart"></div>
+            </div>
+
+            <div class="chart-card glass-card">
+              <div class="chart-card-header">
+                <div class="chart-title-group">
+                  <span class="tech-label" style="color: var(--critical-red);">DEFICIT PROJECTION</span>
+                  <h3 class="chart-title">Available Supply vs Predicted Demand</h3>
+                  <span class="chart-subtitle">Shaded area highlights deficit crossover window</span>
+                </div>
+                <div class="chart-legend">
+                  <div class="chart-legend-item"><span class="legend-line supply"></span> Available Supply</div>
+                  <div class="chart-legend-item"><span class="legend-line predicted"></span> Demand</div>
+                </div>
+              </div>
+              <div class="chart-container" id="overview-supply-demand-chart"></div>
+            </div>
+          </div>
+
+          <!-- Row 2: Battery Reserve & Station Load Breakdown & Alert Center -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+            <div class="chart-card glass-card">
+              <div class="chart-card-header">
+                <div class="chart-title-group">
+                  <span class="tech-label" style="color: var(--warning-amber);">ENERGY STORAGE RESERVE</span>
+                  <h3 class="chart-title">Battery SOC Over Time</h3>
+                  <span class="chart-subtitle">Discharge curve vs 20% safe buffer</span>
+                </div>
+              </div>
+              <div class="chart-container" id="overview-battery-chart" style="height: 180px;"></div>
+            </div>
+
+            <div class="glass-card" style="padding: 20px 22px;">
+              <div class="chart-card-header" style="margin-bottom: 8px;">
+                <div class="chart-title-group">
+                  <span class="tech-label" style="color: var(--secondary-violet);">GRID ALLOCATION</span>
+                  <h3 class="chart-title">Station Load Distribution</h3>
+                </div>
+                <a href="#loads" class="tech-label" style="color: var(--primary-cyan); text-decoration: underline;">View All →</a>
+              </div>
+
+              <div class="load-summary-bar-wrapper">
+                <div class="load-stacked-bar">
+                  <div class="bar-segment critical" style="width: 50%;" title="Critical: 43 kW (50%)"></div>
+                  <div class="bar-segment essential" style="width: 39%;" title="Essential: 37 kW (39%)"></div>
+                  <div class="bar-segment non-critical" style="width: 11%;" title="Non-Critical: 10 kW (11%)"></div>
+                </div>
+                <div class="load-legend">
+                  <div class="legend-item"><span class="legend-color-dot critical"></span> CRITICAL: 43 kW</div>
+                  <div class="legend-item"><span class="legend-color-dot essential"></span> ESSENTIAL: 37 kW</div>
+                  <div class="legend-item"><span class="legend-color-dot non-critical"></span> NON-CRITICAL: 10 kW</div>
+                </div>
+              </div>
+
+              <div class="overview-equipment-list">
+                <div class="equipment-item-row">
+                  <div class="eq-left">
+                    <span class="status-dot critical"></span>
+                    <div>
+                      <div class="eq-name">Heating Unit 01</div>
+                      <div class="eq-meta">Habitat Quarters Main</div>
+                    </div>
+                  </div>
+                  <div class="eq-right">
+                    <span class="eq-power">35 kW</span>
+                    <span class="badge badge-critical">CRITICAL</span>
+                  </div>
+                </div>
+
+                <div class="equipment-item-row">
+                  <div class="eq-left">
+                    <span class="status-dot warning"></span>
+                    <div>
+                      <div class="eq-name">Laboratory Core</div>
+                      <div class="eq-meta">Cryo & Atmospheric</div>
+                    </div>
+                  </div>
+                  <div class="eq-right">
+                    <span class="eq-power">25 kW</span>
+                    <span class="badge badge-cyan">ESSENTIAL</span>
+                  </div>
+                </div>
+
+                <div class="equipment-item-row">
+                  <div class="eq-left">
+                    <span class="status-dot live"></span>
+                    <div>
+                      <div class="eq-name">Facility Lighting</div>
+                      <div class="eq-meta">Walkways & External</div>
+                    </div>
+                  </div>
+                  <div class="eq-right">
+                    <span class="eq-power">12 kW</span>
+                    <span class="badge badge-cyan">ESSENTIAL</span>
+                  </div>
+                </div>
+
+                <div class="equipment-item-row">
+                  <div class="eq-left">
+                    <span class="status-dot live"></span>
+                    <div>
+                      <div class="eq-name">Auxiliary Equipment</div>
+                      <div class="eq-meta">Water Heater & Pumps</div>
+                    </div>
+                  </div>
+                  <div class="eq-right">
+                    <span class="eq-power">10 kW</span>
+                    <span class="badge badge-violet">NON-CRITICAL</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card" style="padding: 20px 22px;">
+              <div class="chart-card-header" style="margin-bottom: 12px;">
+                <div class="chart-title-group">
+                  <span class="tech-label" style="color: var(--critical-red);">ACTIVE SIGNALS</span>
+                  <h3 class="chart-title">Alert Center</h3>
+                </div>
+                <span class="badge badge-critical">4 ACTIVE</span>
+              </div>
+              <div id="overview-alert-list"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             PAGE 2: PREDICTIONS
+             =================================================================== -->
+        <div class="page-view" id="view-predictions">
+          <div style="margin-bottom: 24px;">
+            <div class="tech-label" style="color: var(--secondary-violet); margin-bottom: 4px;">DEEP FORECASTING CORE</div>
+            <h1 style="font-size: 1.6rem; letter-spacing: -0.02em;">AI ENERGY PREDICTIONS</h1>
+            <p style="font-size: 0.88rem; margin-top: 2px;">Forecast future demand and renewable energy availability across Antarctic horizons.</p>
+          </div>
+
+          <div class="glass-card" style="padding: 24px 28px; margin-bottom: 28px; border-left: 4px solid var(--secondary-violet);">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
+              <div>
+                <span class="tech-label" style="color: var(--secondary-violet);">MODULE A // DEMAND PREDICTOR</span>
+                <h2 style="font-size: 1.25rem; margin-top: 2px;">Energy Demand Prediction Engine (XGBoost)</h2>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <div class="segmented-control" id="demand-horizon-control">
+                  <button class="segment-btn active" data-horizon="1h">1 Hour</button>
+                  <button class="segment-btn" data-horizon="6h">6 Hours</button>
+                  <button class="segment-btn" data-horizon="24h">24 Hours</button>
+                </div>
+                <div class="segmented-control" id="demand-scenario-control">
+                  <button class="segment-btn active" data-scenario="current">Live Grid</button>
+                  <button class="segment-btn" data-scenario="digital-twin">Digital Twin</button>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 20px;">
+              <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <div class="tech-label">PREDICTED DEMAND</div>
+                <div class="mono-val" style="font-size: 1.6rem; font-weight: 800; color: #d1b8ff; margin-top: 2px;" id="pred-page-demand">108.0 kW</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted);">XGBoost Output</div>
+              </div>
+              <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <div class="tech-label">PEAK DEMAND</div>
+                <div class="mono-val" style="font-size: 1.6rem; font-weight: 800; color: var(--critical-red); margin-top: 2px;" id="pred-page-peak">115.0 kW</div>
+                <div style="font-size: 0.72rem; color: var(--critical-red);">Critical Surge Threshold</div>
+              </div>
+              <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <div class="tech-label">TREND VECTOR</div>
+                <div class="mono-val" style="font-size: 1.3rem; font-weight: 700; color: #FF8557; margin-top: 5px;">↑ INCREASING</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted);">Rate: +18 kW / hr</div>
+              </div>
+              <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <div class="tech-label">FORECAST HORIZON</div>
+                <div class="mono-val" style="font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-top: 5px;" id="pred-page-horizon-label">1 HOUR</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted);">Trained Joblib Artifact</div>
+              </div>
+              <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <div class="tech-label">SURGE WINDOW ETA</div>
+                <div class="mono-val" style="font-size: 1.3rem; font-weight: 700; color: var(--critical-red); margin-top: 5px;">15:30 UTC</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted);">+1.5h From Current</div>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: start;">
+              <div>
+                <div class="chart-container chart-container-lg" id="predictions-demand-chart"></div>
+              </div>
+              <div style="background: rgba(7, 17, 31, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 18px;">
+                <div class="tech-label" style="color: var(--secondary-violet); margin-bottom: 12px;">PRIMARY DRIVING FACTORS</div>
+                <div style="display: flex; flex-direction: column; gap: 14px;">
+                  <div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 4px;">
+                      <span><strong>Exterior Temp (-20°C Blizzard)</strong></span>
+                      <span class="mono-val" style="color: var(--critical-red);">+14 kW (45%)</span>
+                    </div>
+                    <div style="height: 6px; background: rgba(150, 200, 230, 0.1); border-radius: 3px; overflow: hidden;">
+                      <div style="width: 45%; height: 100%; background: var(--critical-red);"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 4px;">
+                      <span><strong>Cryo Lab & Freezers Run</strong></span>
+                      <span class="mono-val" style="color: #FF8557;">+8 kW (32%)</span>
+                    </div>
+                    <div style="height: 6px; background: rgba(150, 200, 230, 0.1); border-radius: 3px; overflow: hidden;">
+                      <div style="width: 32%; height: 100%; background: #FF8557;"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 4px;">
+                      <span><strong>Day Crew Activity Shift</strong></span>
+                      <span class="mono-val" style="color: var(--primary-cyan);">+4 kW (23%)</span>
+                    </div>
+                    <div style="height: 6px; background: rgba(150, 200, 230, 0.1); border-radius: 3px; overflow: hidden;">
+                      <div style="width: 23%; height: 100%; background: var(--primary-cyan);"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding: 24px 28px; border-left: 4px solid var(--primary-cyan);">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
+              <div>
+                <span class="tech-label" style="color: var(--primary-cyan);">MODULE B // GENERATION FORECASTER</span>
+                <h2 style="font-size: 1.25rem; margin-top: 2px;">Renewable Energy Prediction Engine (XGBoost)</h2>
+              </div>
+              <div class="segmented-control" id="renewable-type-control">
+                <button class="segment-btn active" data-type="wind">Wind Turbines</button>
+                <button class="segment-btn" data-type="solar">Solar Arrays</button>
+                <button class="segment-btn" data-type="all">Wind + Solar</button>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px;">
+              <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <div class="tech-label">CURRENT GENERATION</div>
+                <div class="mono-val" style="font-size: 1.6rem; font-weight: 800; color: var(--success-aurora); margin-top: 2px;">25.0 kW</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted);">Turbine Field 02 (4 Active)</div>
+              </div>
+              <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <div class="tech-label">FORECAST (+1 HOUR)</div>
+                <div class="mono-val" style="font-size: 1.6rem; font-weight: 800; color: var(--warning-amber); margin-top: 2px;">22.0 kW</div>
+                <div style="font-size: 0.72rem; color: var(--warning-amber);">Drop to 19 kW by +2h</div>
+              </div>
+              <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <div class="tech-label">TREND DIRECTION</div>
+                <div class="mono-val" style="font-size: 1.3rem; font-weight: 700; color: var(--warning-amber); margin-top: 5px;">↓ DECREASING</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted);">Wind velocity tapering</div>
+              </div>
+              <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                <div class="tech-label">CONFIDENCE SCORE</div>
+                <div class="mono-val" style="font-size: 1.3rem; font-weight: 700; color: var(--primary-cyan); margin-top: 5px;">94.2%</div>
+                <div style="font-size: 0.72rem; color: var(--text-muted);">Trained Model Output</div>
+              </div>
+            </div>
+
+            <div class="chart-container chart-container-lg" id="predictions-renewable-chart"></div>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             PAGE 3: CRISIS & RISK (SIGNATURE INTELLIGENCE SCREEN)
+             =================================================================== -->
+        <div class="page-view" id="view-crisis-risk">
+          <div style="margin-bottom: 24px; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <div class="tech-label" style="color: var(--critical-red); margin-bottom: 4px;">PRIORITY INTELLIGENCE DIRECTIVE</div>
+              <h1 style="font-size: 1.75rem; letter-spacing: -0.02em; color: var(--text-highlight);">
+                POLAR ENERGY CRISIS INTELLIGENCE
+              </h1>
+              <p style="font-size: 0.92rem; margin-top: 4px;">Autonomous predictive threat assessment and grid stability forecasting.</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="badge badge-critical" style="font-size: 0.8rem; padding: 6px 14px;">
+                <span class="status-dot critical"></span> THREAT INDEX: SEVERITY LEVEL 4
+              </span>
+            </div>
+          </div>
+
+          <!-- Hero Intelligence Split: Left Gauge & Deficit Summary, Right Recommended Response -->
+          <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; margin-bottom: 28px;">
+            <div class="glass-card" style="padding: 26px 30px; border: 1px solid rgba(255, 92, 122, 0.45); box-shadow: var(--shadow-card), var(--glow-critical); position: relative; overflow: hidden;">
+              <div style="position: absolute; top: -30px; right: -30px; width: 140px; height: 140px; background: radial-gradient(circle, rgba(255, 92, 122, 0.15) 0%, transparent 70%); pointer-events: none;"></div>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                <div class="tech-label" style="color: var(--critical-red); font-size: 0.78rem;">REAL-TIME THREAT CORE</div>
+                <span class="badge badge-critical">AUTONOMOUS FORECAST</span>
+              </div>
+              <div style="display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
+                <div id="crisis-gauge-container"></div>
+                <div style="display: flex; flex-direction: column; gap: 14px; min-width: 200px;">
+                  <div style="background: rgba(255, 92, 122, 0.1); border: 1px solid rgba(255, 92, 122, 0.3); border-radius: var(--radius-sm); padding: 14px 18px;">
+                    <div class="tech-label" style="color: var(--critical-red);">PREDICTED OCCURRENCE</div>
+                    <div class="mono-val" style="font-size: 2.1rem; font-weight: 800; color: #FFFFFF; line-height: 1.1; margin-top: 4px;">1.5 HOURS</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Estimated Timestamp: 15:30 UTC</div>
+                  </div>
+                  <div style="background: rgba(7, 17, 31, 0.8); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 14px 18px;">
+                    <div class="tech-label">EXPECTED ENERGY DEFICIT</div>
+                    <div class="mono-val" style="font-size: 1.9rem; font-weight: 800; color: var(--critical-red); line-height: 1.1; margin-top: 4px;">-33 kW</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Demand exceeds generation + safe discharge</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-card" style="padding: 26px 30px; display: flex; flex-direction: column; justify-content: space-between; border-color: rgba(85, 214, 255, 0.35); background: linear-gradient(145deg, rgba(16, 31, 51, 0.85) 0%, rgba(11, 23, 40, 0.95) 100%);">
+              <div>
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                  <span class="tech-label" style="color: var(--primary-cyan); font-size: 0.78rem;">AI MITIGATION RECOMMENDATION</span>
+                  <span class="badge badge-safe">PROTECTS ALL CRITICAL LOADS</span>
+                </div>
+                <h2 style="font-size: 1.35rem; color: var(--text-highlight); margin-bottom: 10px; line-height: 1.3;">
+                  Reduce or Delay Non-Critical Auxiliary Loads
+                </h2>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 18px;">
+                  The AI decision engine recommends deferring the scheduled secondary greywater heating cycle 
+                  (<strong style="color: var(--text-highlight);">10 kW</strong>) and dimming station walkway lighting by 50% 
+                  (<strong style="color: var(--text-highlight);">6 kW</strong>). This eliminates the projected 33 kW deficit and extends safe battery survival buffer.
+                </p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+                  <div style="background: rgba(7, 17, 31, 0.6); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                    <div class="tech-label">POTENTIAL POWER SAVING</div>
+                    <div class="mono-val" style="font-size: 1.4rem; font-weight: 700; color: var(--success-aurora); margin-top: 2px;">+16 kW</div>
+                  </div>
+                  <div style="background: rgba(7, 17, 31, 0.6); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                    <div class="tech-label">RESERVE EXTENSION</div>
+                    <div class="mono-val" style="font-size: 1.4rem; font-weight: 700; color: var(--primary-cyan); margin-top: 2px;">+2.5 Hours</div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div style="text-align: center; margin-top: 8px; font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">
+                  Virtual sandbox mode &bull; Live station grid will not be altered
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Supply vs Demand Large Deficit Chart -->
+          <div class="chart-card glass-card" style="margin-bottom: 24px;">
+            <div class="chart-card-header">
+              <div class="chart-title-group">
+                <span class="tech-label" style="color: var(--critical-red);">SUPPLY DEFICIT MODEL</span>
+                <h3 class="chart-title">Supply vs Demand Forecast & Deficit Crossover</h3>
+                <span class="chart-subtitle">Direct visualization of predicted shortage zone (+1h to +4h)</span>
+              </div>
+              <div class="chart-legend">
+                <div class="chart-legend-item"><span class="legend-line supply"></span> Available Supply (70–75 kW)</div>
+                <div class="chart-legend-item"><span class="legend-line predicted"></span> Predicted Demand (90–115 kW)</div>
+                <div class="chart-legend-item" style="color: var(--critical-red); font-weight: 600;">⚠ Shaded = 33 kW Deficit</div>
+              </div>
+            </div>
+            <div class="chart-container chart-container-lg" id="crisis-supply-demand-chart"></div>
+          </div>
+
+          <!-- Risk Timeline Section -->
+          <div id="crisis-risk-timeline-container" style="margin-bottom: 28px;"></div>
+
+          <!-- Why Is The Risk High? 3 Root Cause Cards -->
+          <div style="margin-bottom: 24px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+              <span class="tech-label" style="color: var(--critical-red);">DIAGNOSTIC EXPLANATION</span>
+              <h3 style="font-size: 1.15rem; color: var(--text-highlight);">Why is the Station Risk High?</h3>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+              <div class="glass-card" style="padding: 20px 22px; border-left: 4px solid var(--critical-red);">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                  <div style="width: 32px; height: 32px; border-radius: var(--radius-sm); background: rgba(255, 92, 122, 0.15); display: flex; align-items: center; justify-content: center; color: var(--critical-red);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+                  </div>
+                  <div>
+                    <span class="badge badge-critical" style="font-size: 0.68rem;">CAUSE 01</span>
+                    <h4 style="font-size: 0.95rem; margin-top: 2px;">Increasing Demand</h4>
+                  </div>
+                </div>
+                <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
+                  Exterior temperature drop to <strong style="color: var(--text-highlight);">-20°C (feels like -34°C)</strong> has triggered continuous multi-stage habitat heating coil cycles plus simultaneous cryogenic laboratory freezer operations (+18 kW).
+                </p>
+              </div>
+
+              <div class="glass-card" style="padding: 20px 22px; border-left: 4px solid #FF8557;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                  <div style="width: 32px; height: 32px; border-radius: var(--radius-sm); background: rgba(255, 133, 87, 0.15); display: flex; align-items: center; justify-content: center; color: #FF8557;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2"/></svg>
+                  </div>
+                  <div>
+                    <span class="badge badge-high" style="font-size: 0.68rem;">CAUSE 02</span>
+                    <h4 style="font-size: 0.95rem; margin-top: 2px;">Low Renewable Generation</h4>
+                  </div>
+                </div>
+                <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
+                  Complete polar night darkness supplies <strong style="color: var(--text-highlight);">0 W/m² solar output</strong>. Wind speed forecast is decelerating from 9.2 m/s down to 5.1 m/s, suppressing turbine generation to just 22 kW.
+                </p>
+              </div>
+
+              <div class="glass-card" style="padding: 20px 22px; border-left: 4px solid var(--warning-amber);">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                  <div style="width: 32px; height: 32px; border-radius: var(--radius-sm); background: rgba(255, 200, 87, 0.15); display: flex; align-items: center; justify-content: center; color: var(--warning-amber);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="13" x2="23" y2="11"/></svg>
+                  </div>
+                  <div>
+                    <span class="badge badge-warning" style="font-size: 0.68rem;">CAUSE 03</span>
+                    <h4 style="font-size: 0.95rem; margin-top: 2px;">Declining Reserve Buffer</h4>
+                  </div>
+                </div>
+                <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
+                  Battery storage is currently at <strong style="color: var(--text-highlight);">35% SOC (175 kWh)</strong>. With a net discharge of 65 kW, the battery will breach the mandatory 20% life-support reserve threshold in under 1.8 hours without mitigation.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             PAGE 4: LOADS
+             =================================================================== -->
+        <div class="page-view" id="view-loads">
+          <div style="margin-bottom: 24px; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <div class="tech-label" style="color: var(--primary-cyan); margin-bottom: 4px;">GRID INTEGRITY CONTROL</div>
+              <h1 style="font-size: 1.6rem; letter-spacing: -0.02em;">ADAPTIVE LOAD PRIORITIZATION</h1>
+              <p style="font-size: 0.88rem; margin-top: 2px;">Protect critical station operations while optimizing available energy.</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="badge badge-safe">AI BALANCER: ACTIVE</span>
+              <span class="badge badge-warning">DIRECT HARD-CUTOFF: LOCKED</span>
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding: 16px 20px; margin-bottom: 24px; border-left: 4px solid var(--primary-cyan); display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <div style="color: var(--primary-cyan); font-size: 1.4rem;">🛡️</div>
+              <div>
+                <div style="font-size: 0.88rem; font-weight: 600; color: var(--text-highlight);">
+                  Safety Protocol Notice: Direct Hardware Switching Locked
+                </div>
+                <p style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 2px;">
+                  Recommended load actions are validated by the Safety Guardian before authorization.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table" id="loads-prioritization-table">
+              <thead>
+                <tr>
+                  <th>EQUIPMENT</th>
+                  <th>TYPE</th>
+                  <th>POWER</th>
+                  <th>CURRENT PRIORITY</th>
+                  <th>RECOMMENDED PRIORITY</th>
+                  <th>REASON</th>
+                  <th>AI ACTION</th>
+                  <th>CONTROLS</th>
+                </tr>
+              </thead>
+              <tbody id="loads-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             PAGE 5: DIGITAL TWIN
+             =================================================================== -->
+        <div class="page-view" id="view-digital-twin">
+          <div class="station-banner status-stable" style="background: linear-gradient(90deg, rgba(139, 124, 255, 0.16) 0%, rgba(16, 31, 51, 0.9) 70%); border-color: rgba(139, 124, 255, 0.45); box-shadow: 0 4px 24px rgba(139, 124, 255, 0.2); margin-bottom: 24px;">
+            <div class="banner-content">
+              <div class="banner-icon-box" style="background: rgba(139, 124, 255, 0.2); color: #c4baff;">
+                <span style="font-size: 1.5rem;">🧪</span>
+              </div>
+              <div class="banner-info">
+                <div class="banner-top-row">
+                  <span class="badge badge-simulation">🧪 SIMULATION MODE // ISOLATED SANDBOX</span>
+                  <span class="tech-label" style="color: #c4baff;">ZERO HARDWARE IMPACT</span>
+                </div>
+                <h2 class="banner-title" style="margin-top: 2px;">Station Physics Digital Twin</h2>
+                <p class="banner-desc">
+                  Test extreme Antarctic meteorological disruptions, sudden equipment dropouts, and occupancy surges. All models run in a virtual sandbox without altering station relays.
+                </p>
+              </div>
+            </div>
+            <div class="banner-metrics">
+              <div class="badge badge-cyan">MODEL: THERMO-GRID v4.1</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 24px;">
+            <div class="glass-card" style="padding: 24px;">
+              <div class="chart-card-header" style="margin-bottom: 20px;">
+                <div class="chart-title-group">
+                  <span class="tech-label" style="color: var(--secondary-violet);">PHYSICS PARAMETER MATRIX</span>
+                  <h3 class="chart-title">Scenario Parameters</h3>
+                </div>
+                <button class="btn btn-secondary btn-sm" id="btn-reset-dt-params">Reset Defaults</button>
+              </div>
+
+              <form id="digital-twin-form" onsubmit="return false;">
+                <div class="form-group">
+                  <div class="form-label-row">
+                    <label class="form-label" for="slider-dt-temp">Exterior Temperature</label>
+                    <span class="slider-val-tag" id="val-dt-temp">-35°C</span>
+                  </div>
+                  <input type="range" class="polar-slider" id="slider-dt-temp" min="-50" max="0" step="1" value="-35">
+                </div>
+
+                <div class="form-group">
+                  <div class="form-label-row">
+                    <label class="form-label" for="slider-dt-wind">Wind Speed</label>
+                    <span class="slider-val-tag" id="val-dt-wind">2.0 m/s</span>
+                  </div>
+                  <input type="range" class="polar-slider" id="slider-dt-wind" min="0" max="30" step="0.5" value="2.0">
+                </div>
+
+                <div class="form-group">
+                  <div class="form-label-row">
+                    <label class="form-label" for="select-dt-solar">Solar Availability</label>
+                  </div>
+                  <select class="polar-select" id="select-dt-solar">
+                    <option value="ZERO">Zero (Polar Night Darkness - 0 W/m²)</option>
+                    <option value="LOW" selected>Low (Twilight Horizon - 25 W/m²)</option>
+                    <option value="MODERATE">Moderate (Polar Spring - 150 W/m²)</option>
+                    <option value="HIGH">High (24h Midnight Sun - 400 W/m²)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <div class="form-label-row">
+                    <label class="form-label" for="slider-dt-crew">Station Occupancy</label>
+                    <span class="slider-val-tag" id="val-dt-crew">38 Researchers</span>
+                  </div>
+                  <input type="range" class="polar-slider" id="slider-dt-crew" min="5" max="50" step="1" value="38">
+                </div>
+
+                <div class="form-group">
+                  <div class="form-label-row">
+                    <label class="form-label">Research Activity Level</label>
+                  </div>
+                  <div class="segmented-control" id="dt-activity-control">
+                    <button class="segment-btn" data-act="LOW">LOW</button>
+                    <button class="segment-btn" data-act="MEDIUM">MEDIUM</button>
+                    <button class="segment-btn active" data-act="HIGH">HIGH (Lab Surge)</button>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <div class="form-label-row">
+                    <label class="form-label" for="slider-dt-battery">Battery Initial SOC</label>
+                    <span class="slider-val-tag" id="val-dt-battery">35% (175 kWh)</span>
+                  </div>
+                  <input type="range" class="polar-slider" id="slider-dt-battery" min="10" max="100" step="1" value="35">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+                  <div class="form-group">
+                    <label class="form-label" for="select-dt-gen">Diesel Generator</label>
+                    <select class="polar-select" id="select-dt-gen">
+                      <option value="AVAILABLE" selected>AVAILABLE (Standby)</option>
+                      <option value="RUNNING">RUNNING (150 kW)</option>
+                      <option value="OFFLINE">OFFLINE (Maintenance)</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="select-dt-fault">Injected Equipment Fault</label>
+                    <select class="polar-select" id="select-dt-fault">
+                      <option value="NONE" selected>NONE (Nominal)</option>
+                      <option value="TURBINE_2_FAIL">Turbine 02 Rotor Lock</option>
+                      <option value="HEATING_COIL_B">Habitat Heater Coil B Degraded</option>
+                      <option value="INVERTER_TRIP">BESS Inverter Bank 1 Trip</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button class="btn btn-primary btn-lg" id="btn-run-simulation" style="width: 100%; margin-top: 10px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  RUN SIMULATION
+                </button>
+              </form>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <div class="glass-card" style="padding: 24px;">
+                <div class="chart-card-header">
+                  <div class="chart-title-group">
+                    <span class="tech-label" style="color: var(--primary-cyan);">VIRTUAL MODEL PREDICTION</span>
+                    <h3 class="chart-title">Baseline vs Simulated State Comparison</h3>
+                  </div>
+                  <span class="badge badge-simulation" id="sim-status-tag">READY FOR SOLVE</span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                  <div style="background: rgba(7, 17, 31, 0.7); padding: 14px 18px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                    <div class="tech-label">STATION DEMAND</div>
+                    <div style="display: flex; align-items: baseline; justify-content: space-between; margin-top: 6px;">
+                      <div>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">LIVE BASELINE</span>
+                        <div class="mono-val" style="font-size: 1.25rem; font-weight: 700; color: var(--text-secondary);">90 kW</div>
+                      </div>
+                      <div style="font-size: 1.2rem; color: var(--text-muted);">➔</div>
+                      <div style="text-align: right;">
+                        <span class="badge badge-simulation" style="font-size: 0.65rem;">SIMULATED</span>
+                        <div class="mono-val" style="font-size: 1.45rem; font-weight: 800; color: var(--critical-red);" id="dt-sim-demand">124 kW</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style="background: rgba(7, 17, 31, 0.7); padding: 14px 18px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                    <div class="tech-label">RENEWABLE GENERATION</div>
+                    <div style="display: flex; align-items: baseline; justify-content: space-between; margin-top: 6px;">
+                      <div>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">LIVE BASELINE</span>
+                        <div class="mono-val" style="font-size: 1.25rem; font-weight: 700; color: var(--text-secondary);">25 kW</div>
+                      </div>
+                      <div style="font-size: 1.2rem; color: var(--text-muted);">➔</div>
+                      <div style="text-align: right;">
+                        <span class="badge badge-simulation" style="font-size: 0.65rem;">SIMULATED</span>
+                        <div class="mono-val" style="font-size: 1.45rem; font-weight: 800; color: var(--warning-amber);" id="dt-sim-renewable">12 kW</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style="background: rgba(7, 17, 31, 0.7); padding: 14px 18px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                    <div class="tech-label">ENERGY RISK INDEX</div>
+                    <div style="display: flex; align-items: baseline; justify-content: space-between; margin-top: 6px;">
+                      <div>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">LIVE BASELINE</span>
+                        <div class="mono-val" style="font-size: 1.25rem; font-weight: 700; color: #FF8557;">78% (HIGH)</div>
+                      </div>
+                      <div style="font-size: 1.2rem; color: var(--text-muted);">➔</div>
+                      <div style="text-align: right;">
+                        <span class="badge badge-simulation" style="font-size: 0.65rem;">SIMULATED</span>
+                        <div class="mono-val" style="font-size: 1.45rem; font-weight: 800; color: var(--critical-red);" id="dt-sim-risk">92% (CRITICAL)</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style="background: rgba(7, 17, 31, 0.7); padding: 14px 18px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                    <div class="tech-label">ESTIMATED SURVIVAL TIME</div>
+                    <div style="display: flex; align-items: baseline; justify-content: space-between; margin-top: 6px;">
+                      <div>
+                        <span style="font-size: 0.75rem; color: var(--text-muted);">LIVE BASELINE</span>
+                        <div class="mono-val" style="font-size: 1.25rem; font-weight: 700; color: var(--text-secondary);">~8.0 h</div>
+                      </div>
+                      <div style="font-size: 1.2rem; color: var(--text-muted);">➔</div>
+                      <div style="text-align: right;">
+                        <span class="badge badge-simulation" style="font-size: 0.65rem;">SIMULATED</span>
+                        <div class="mono-val" style="font-size: 1.45rem; font-weight: 800; color: var(--critical-red);" id="dt-sim-survival">1.6 h</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="background: rgba(16, 31, 51, 0.8); border: 1px solid var(--border-highlight); border-radius: var(--radius-sm); padding: 18px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <span class="tech-label" style="color: var(--primary-cyan);">SIMULATED CRISIS ARRIVAL</span>
+                    <span class="badge badge-critical" id="dt-sim-eta">SHORTAGE IN 1.1 HOURS</span>
+                  </div>
+                  <div class="tech-label" style="margin-top: 10px; margin-bottom: 4px;">DIGITAL TWIN RECOMMENDED ACTION</div>
+                  <p style="font-size: 0.88rem; color: var(--text-highlight); line-height: 1.45;" id="dt-sim-action">
+                    Pre-emptively start auxiliary Diesel Generator 01 in warm standby, cycle habitability heating coils to 80% duty, and defer greywater heating cycle.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             PAGE 6: SAFETY & APPROVAL
+             =================================================================== -->
+        <div class="page-view" id="view-safety">
+          <div style="margin-bottom: 24px; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <div class="tech-label" style="color: var(--success-aurora); margin-bottom: 4px;">HUMAN-IN-THE-LOOP AUTHORIZATION</div>
+              <h1 style="font-size: 1.6rem; letter-spacing: -0.02em;">SAFETY GUARDIAN</h1>
+              <p style="font-size: 0.88rem; margin-top: 2px;">Every recommended action must pass rigorous life-safety and authorization checks.</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="badge badge-safe">SAFETY PROTOCOL LS-104 ENFORCED</span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 24px; margin-bottom: 28px;">
+            <div class="glass-card" style="padding: 24px;">
+              <div class="chart-card-header" style="margin-bottom: 12px;">
+                <div class="chart-title-group">
+                  <span class="tech-label" style="color: var(--primary-cyan);">GATEWAY VERIFICATION PIPELINE</span>
+                  <h3 class="chart-title">Safety Guardian Stages</h3>
+                </div>
+              </div>
+
+              <div class="process-timeline">
+                <div class="timeline-step completed" id="step-ai-rec">
+                  <div class="timeline-node">1</div>
+                  <div class="timeline-content">
+                    <div class="timeline-step-title">AI Recommendation Received</div>
+                    <div class="timeline-step-desc" id="step-ai-rec-desc">
+                      Proposed mitigation generated by Crisis Intelligence engine.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="timeline-step completed" id="step-safety-check">
+                  <div class="timeline-node">2</div>
+                  <div class="timeline-content">
+                    <div class="timeline-step-title">Physical Limits & Life Support Audit</div>
+                    <div class="timeline-step-desc" id="step-safety-check-desc">
+                      Checked against cryogenic freezer, O2 scrubbers, and thermal habitability minimums.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="timeline-step completed" id="step-auth-check">
+                  <div class="timeline-node">3</div>
+                  <div class="timeline-content">
+                    <div class="timeline-step-title">Operator Role & Clearance Verification</div>
+                    <div class="timeline-step-desc">
+                      Active Operator: <strong>Cmdr. Elena Vance (Level 4 Grid Admin)</strong>.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="timeline-step active" id="step-operator-approval">
+                  <div class="timeline-node">4</div>
+                  <div class="timeline-content">
+                    <div class="timeline-step-title">Explicit Operator Digital Signature</div>
+                    <div class="timeline-step-desc">
+                      Awaiting operator review and formal approval key before grid adjustment.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="timeline-step" id="step-action-log">
+                  <div class="timeline-node">5</div>
+                  <div class="timeline-content">
+                    <div class="timeline-step-title">Audit Trail & Historical Record</div>
+                    <div class="timeline-step-desc">
+                      Telemetry and digital signature recorded to Station Blackbox and Logbook.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <div class="glass-card" style="padding: 26px; border: 1px solid var(--border-highlight);" id="safety-main-card">
+                <div class="chart-card-header">
+                  <div class="chart-title-group">
+                    <span class="tech-label" style="color: var(--primary-cyan);">EVALUATION REPORT</span>
+                    <h3 class="chart-title" id="safety-action-title">Proposed Action Checklist</h3>
+                  </div>
+                  <span class="badge badge-cyan" id="safety-proposal-id">PROP-904</span>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+                  <div class="equipment-item-row">
+                    <div>
+                      <div style="font-weight: 600; color: var(--text-highlight);">Equipment Critical to Life Support?</div>
+                      <div style="font-size: 0.72rem; color: var(--text-muted);">Habitat heating, air scrubbers, water purification</div>
+                    </div>
+                    <span class="badge badge-safe" id="check-equipment-critical">NO (PASS)</span>
+                  </div>
+
+                  <div class="equipment-item-row">
+                    <div>
+                      <div style="font-weight: 600; color: var(--text-highlight);">Action Within Thermal / Voltage Limits?</div>
+                      <div style="font-size: 0.72rem; color: var(--text-muted);">Thermal inertia > 4 hours, no freeze risk</div>
+                    </div>
+                    <span class="badge badge-safe" id="check-safety-limits">PASS</span>
+                  </div>
+
+                  <div class="equipment-item-row">
+                    <div>
+                      <div style="font-weight: 600; color: var(--text-highlight);">Station Under Evacuation / Code Red?</div>
+                      <div style="font-size: 0.72rem; color: var(--text-muted);">Normal science research regime</div>
+                    </div>
+                    <span class="badge badge-safe" id="check-emergency-condition">NO (PASS)</span>
+                  </div>
+
+                  <div class="equipment-item-row">
+                    <div>
+                      <div style="font-weight: 600; color: var(--text-highlight);">Current Operator Authorized?</div>
+                      <div style="font-size: 0.72rem; color: var(--text-muted);">Commander Level 4 clearance verified</div>
+                    </div>
+                    <span class="badge badge-safe" id="check-operator-auth">YES (PASS)</span>
+                  </div>
+
+                  <div class="equipment-item-row">
+                    <div>
+                      <div style="font-weight: 600; color: var(--text-highlight);">Explicit Human Approval Required?</div>
+                      <div style="font-size: 0.72rem; color: var(--text-muted);">Autonomous execution disabled by polar treaty</div>
+                    </div>
+                    <span class="badge badge-warning" id="check-approval-required">YES (REQUIRED)</span>
+                  </div>
+                </div>
+
+                <div id="safety-final-status-box" style="padding: 18px 20px; border-radius: var(--radius-sm); margin-bottom: 24px; background: rgba(57, 230, 165, 0.12); border: 1px solid rgba(57, 230, 165, 0.4); display: flex; align-items: center; justify-content: space-between;">
+                  <div>
+                    <div class="tech-label" style="color: var(--success-aurora); font-weight: 700;">FINAL SAFETY GUARDIAN STATUS</div>
+                    <div class="mono-val" style="font-size: 1.8rem; font-weight: 800; color: var(--success-aurora); line-height: 1.1; margin-top: 4px;" id="safety-final-status-text">
+                      PERMITTED
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px;" id="safety-final-status-desc">
+                      Action satisfies all polar electrical and safety codes. Awaiting operator signature.
+                    </div>
+                  </div>
+                  <div style="font-size: 2.4rem;" id="safety-status-emoji">✓</div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 14px;">
+                  <button class="btn btn-success btn-lg" id="btn-approve-safety-action">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    APPROVE ACTION & APPLY
+                  </button>
+                  <button class="btn btn-secondary btn-lg" id="btn-reject-safety-action">
+                    REJECT ACTION
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             PAGE 7: HISTORY & LOGS
+             =================================================================== -->
+        <div class="page-view" id="view-history">
+          <div style="margin-bottom: 24px; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+            <div>
+              <div class="tech-label" style="color: var(--primary-cyan); margin-bottom: 4px;">STATION BLACKBOX RECORD</div>
+              <h1 style="font-size: 1.6rem; letter-spacing: -0.02em;">SYSTEM HISTORY & AUDIT LOGS</h1>
+              <p style="font-size: 0.88rem; margin-top: 2px;">Comprehensive chronological telemetry logs, AI inference events, and operator actions.</p>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <button class="btn btn-secondary btn-sm" id="btn-export-logs">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Export Audit Log (JSON)
+              </button>
+            </div>
+          </div>
+
+          <div class="glass-card" style="padding: 18px 22px; margin-bottom: 24px;">
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 16px; align-items: end;">
+              <div>
+                <label class="form-label" for="history-search-input">Search Events or Logs</label>
+                <input type="text" class="polar-input" id="history-search-input" placeholder="Search keywords, IDs, or equipment...">
+              </div>
+
+              <div>
+                <label class="form-label" for="history-category-select">Event Category</label>
+                <select class="polar-select" id="history-category-select">
+                  <option value="ALL">All Categories</option>
+                  <option value="Safety Guardian">Safety Guardian</option>
+                  <option value="Risk Engine">Risk Engine</option>
+                  <option value="Prediction">Prediction</option>
+                  <option value="Loads">Loads</option>
+                  <option value="Telemetry">Telemetry</option>
+                  <option value="Digital Twin">Digital Twin</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="form-label" for="history-severity-select">Severity Level</label>
+                <select class="polar-select" id="history-severity-select">
+                  <option value="ALL">All Severities</option>
+                  <option value="CRITICAL">Critical</option>
+                  <option value="WARNING">Warning</option>
+                  <option value="INFO">Info</option>
+                </select>
+              </div>
+
+              <div>
+                <button class="btn btn-secondary" id="btn-reset-history-filters" style="width: 100%;">
+                  Reset Filters
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table" id="history-table">
+              <thead>
+                <tr>
+                  <th>LOG ID & TIMESTAMP</th>
+                  <th>EVENT TITLE</th>
+                  <th>CATEGORY</th>
+                  <th>SEVERITY</th>
+                  <th>DETAILS</th>
+                  <th>OPERATOR / ENGINE</th>
+                </tr>
+              </thead>
+              <tbody id="history-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Global Modal Dialog Container -->
+  <div id="global-modal-backdrop" class="modal-backdrop"></div>
+
+  <!-- JavaScript Modules (Loaded in dependency order) -->
+  <!-- 1. Baseline Demo Data & Configuration -->
+  <script src="data/demo-data.js"></script>
+  <script src="js/config.js"></script>
+
+  <!-- 2. Central State Store & API Service -->
+  <script src="js/state.js"></script>
+  <script src="js/api.js"></script>
+
+  <!-- 3. Global Components -->
+  <script src="js/components/toast.js"></script>
+  <script src="js/components/modal.js"></script>
+  <script src="js/components/alert.js"></script>
+  <script src="js/components/sidebar.js"></script>
+  <script src="js/components/header.js"></script>
+  <script src="js/components/station-context.js"></script>
+
+  <!-- 4. Specialized SVG Charts -->
+  <script src="js/charts/demand-chart.js"></script>
+  <script src="js/charts/renewable-chart.js"></script>
+  <script src="js/charts/supply-demand-chart.js"></script>
+  <script src="js/charts/battery-chart.js"></script>
+  <script src="js/charts/risk-chart.js"></script>
+
+  <!-- 5. Page Controllers -->
+  <script src="js/pages/overview.js"></script>
+  <script src="js/pages/predictions.js"></script>
+  <script src="js/pages/crisis-risk.js"></script>
+  <script src="js/pages/loads.js"></script>
+  <script src="js/pages/digital-twin.js"></script>
+  <script src="js/pages/safety.js"></script>
+  <script src="js/pages/history.js"></script>
+
+  <!-- 6. Navigation Router & Application Bootstrap -->
+  <script src="js/navigation.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

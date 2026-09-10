@@ -1,0 +1,166 @@
+<!-- PREDICTIONS PAGE TEMPLATE -->
+<div class="page-view" id="view-predictions">
+  <div style="margin-bottom: 24px;">
+    <div class="tech-label" style="color: var(--secondary-violet); margin-bottom: 4px;">DEEP FORECASTING CORE</div>
+    <h1 style="font-size: 1.6rem; letter-spacing: -0.02em;">AI ENERGY PREDICTIONS</h1>
+    <p style="font-size: 0.88rem; margin-top: 2px;">Forecast future demand and renewable energy availability across Antarctic horizons.</p>
+  </div>
+
+  <!-- MODULE A: ENERGY DEMAND PREDICTION -->
+  <div class="glass-card" style="padding: 24px 28px; margin-bottom: 28px; border-left: 4px solid var(--secondary-violet);">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
+      <div>
+        <span class="tech-label" style="color: var(--secondary-violet);">MODULE A // DEMAND PREDICTOR</span>
+        <h2 style="font-size: 1.25rem; margin-top: 2px;">Energy Demand Prediction Engine</h2>
+      </div>
+
+      <!-- Controls Row: Station, Zone, Horizon, Scenario -->
+      <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <!-- Horizon Switcher -->
+        <div class="segmented-control" id="demand-horizon-control">
+          <button class="segment-btn active" data-horizon="1h">1 Hour</button>
+          <button class="segment-btn" data-horizon="6h">6 Hours</button>
+          <button class="segment-btn" data-horizon="24h">24 Hours</button>
+        </div>
+
+        <!-- Scenario Selector -->
+        <div class="segmented-control" id="demand-scenario-control">
+          <button class="segment-btn active" data-scenario="current">Live Grid</button>
+          <button class="segment-btn" data-scenario="digital-twin">Digital Twin</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Demand Metrics Row -->
+    <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-bottom: 20px;">
+      <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div class="tech-label">PREDICTED DEMAND</div>
+        <div class="mono-val" style="font-size: 1.6rem; font-weight: 800; color: #d1b8ff; margin-top: 2px;" id="pred-page-demand">108 kW</div>
+        <div style="font-size: 0.72rem; color: var(--text-muted);">Mean Forecast</div>
+      </div>
+
+      <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div class="tech-label">PEAK DEMAND</div>
+        <div class="mono-val" style="font-size: 1.6rem; font-weight: 800; color: var(--critical-red); margin-top: 2px;" id="pred-page-peak">115 kW</div>
+        <div style="font-size: 0.72rem; color: var(--critical-red);">Critical Surge Threshold</div>
+      </div>
+
+      <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div class="tech-label">TREND VECTOR</div>
+        <div class="mono-val" style="font-size: 1.3rem; font-weight: 700; color: #FF8557; margin-top: 5px;">
+          ↑ INCREASING
+        </div>
+        <div style="font-size: 0.72rem; color: var(--text-muted);">Rate: +18 kW / hr</div>
+      </div>
+
+      <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div class="tech-label">FORECAST HORIZON</div>
+        <div class="mono-val" style="font-size: 1.3rem; font-weight: 700; color: var(--text-main); margin-top: 5px;" id="pred-page-horizon-label">1 HOUR</div>
+        <div style="font-size: 0.72rem; color: var(--text-muted);">Confidence: 96.4%</div>
+      </div>
+
+      <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div class="tech-label">SURGE WINDOW ETA</div>
+        <div class="mono-val" style="font-size: 1.3rem; font-weight: 700; color: var(--critical-red); margin-top: 5px;">15:30 UTC</div>
+        <div style="font-size: 0.72rem; color: var(--text-muted);">+1.5h From Current</div>
+      </div>
+    </div>
+
+    <!-- Chart + Factors Split -->
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: start;">
+      <div>
+        <div class="chart-container chart-container-lg" id="predictions-demand-chart"></div>
+      </div>
+
+      <!-- Main Factors Panel -->
+      <div style="background: rgba(7, 17, 31, 0.6); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 18px;">
+        <div class="tech-label" style="color: var(--secondary-violet); margin-bottom: 12px;">PRIMARY DRIVING FACTORS</div>
+        
+        <div style="display: flex; flex-direction: column; gap: 14px;">
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 4px;">
+              <span><strong>Low Temp (-20°C Blizzard)</strong></span>
+              <span class="mono-val" style="color: var(--critical-red);">+14 kW (45%)</span>
+            </div>
+            <div style="height: 6px; background: rgba(150, 200, 230, 0.1); border-radius: 3px; overflow: hidden;">
+              <div style="width: 45%; height: 100%; background: var(--critical-red);"></div>
+            </div>
+          </div>
+
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 4px;">
+              <span><strong>Cryo Lab & Freezers Run</strong></span>
+              <span class="mono-val" style="color: #FF8557;">+8 kW (32%)</span>
+            </div>
+            <div style="height: 6px; background: rgba(150, 200, 230, 0.1); border-radius: 3px; overflow: hidden;">
+              <div style="width: 32%; height: 100%; background: #FF8557;"></div>
+            </div>
+          </div>
+
+          <div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 4px;">
+              <span><strong>Day Crew Activity Shift</strong></span>
+              <span class="mono-val" style="color: var(--primary-cyan);">+4 kW (23%)</span>
+            </div>
+            <div style="height: 6px; background: rgba(150, 200, 230, 0.1); border-radius: 3px; overflow: hidden;">
+              <div style="width: 23%; height: 100%; background: var(--primary-cyan);"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(150, 200, 230, 0.1); font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">
+          💡 <em>Algorithm Note: DeepAR thermal regression correlates each 1°C ambient drop below -15°C with an additional 1.4 kW continuous habitat heating load.</em>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE B: RENEWABLE ENERGY PREDICTION -->
+  <div class="glass-card" style="padding: 24px 28px; border-left: 4px solid var(--primary-cyan);">
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 20px;">
+      <div>
+        <span class="tech-label" style="color: var(--primary-cyan);">MODULE B // GENERATION FORECASTER</span>
+        <h2 style="font-size: 1.25rem; margin-top: 2px;">Renewable Energy Prediction Engine</h2>
+      </div>
+
+      <!-- Controls: Type Switcher -->
+      <div class="segmented-control" id="renewable-type-control">
+        <button class="segment-btn active" data-type="wind">Wind Turbines</button>
+        <button class="segment-btn" data-type="solar">Solar Arrays</button>
+        <button class="segment-btn" data-type="all">Wind + Solar</button>
+      </div>
+    </div>
+
+    <!-- Renewable Metrics Row -->
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px;">
+      <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div class="tech-label">CURRENT GENERATION</div>
+        <div class="mono-val" style="font-size: 1.6rem; font-weight: 800; color: var(--success-aurora); margin-top: 2px;">25 kW</div>
+        <div style="font-size: 0.72rem; color: var(--text-muted);">Turbine Field 02 (4 Active)</div>
+      </div>
+
+      <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div class="tech-label">FORECAST (+1 HOUR)</div>
+        <div class="mono-val" style="font-size: 1.6rem; font-weight: 800; color: var(--warning-amber); margin-top: 2px;">22 kW</div>
+        <div style="font-size: 0.72rem; color: var(--warning-amber);">Drop to 19 kW by +2h</div>
+      </div>
+
+      <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div class="tech-label">TREND DIRECTION</div>
+        <div class="mono-val" style="font-size: 1.3rem; font-weight: 700; color: var(--warning-amber); margin-top: 5px;">
+          ↓ DECREASING
+        </div>
+        <div style="font-size: 0.72rem; color: var(--text-muted);">Wind velocity tapering</div>
+      </div>
+
+      <div style="background: rgba(7, 17, 31, 0.7); padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+        <div class="tech-label">CONFIDENCE SCORE</div>
+        <div class="mono-val" style="font-size: 1.3rem; font-weight: 700; color: var(--primary-cyan); margin-top: 5px;">94.2%</div>
+        <div style="font-size: 0.72rem; color: var(--text-muted);">Ensemble ECMWF + NOAA</div>
+      </div>
+    </div>
+
+    <!-- Renewable Forecast Chart -->
+    <div class="chart-container chart-container-lg" id="predictions-renewable-chart"></div>
+  </div>
+</div>

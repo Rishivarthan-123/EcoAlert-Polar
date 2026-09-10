@@ -1,0 +1,171 @@
+<!-- CRISIS & RISK PAGE TEMPLATE (SIGNATURE INTELLIGENCE SCREEN) -->
+<div class="page-view" id="view-crisis-risk">
+  <!-- Top Intelligence Header -->
+  <div style="margin-bottom: 24px; display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+    <div>
+      <div class="tech-label" style="color: var(--critical-red); margin-bottom: 4px;">PRIORITY INTELLIGENCE DIRECTIVE</div>
+      <h1 style="font-size: 1.75rem; letter-spacing: -0.02em; color: var(--text-highlight);">
+        POLAR ENERGY CRISIS INTELLIGENCE
+      </h1>
+      <p style="font-size: 0.92rem; margin-top: 4px;">Autonomous predictive threat assessment and grid stability forecasting.</p>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <span class="badge badge-critical" style="font-size: 0.8rem; padding: 6px 14px;">
+        <span class="status-dot critical"></span> THREAT INDEX: SEVERITY LEVEL 4
+      </span>
+    </div>
+  </div>
+
+  <!-- Hero Intelligence Split: Left Gauge & Deficit Summary, Right Recommended Response -->
+  <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; margin-bottom: 28px;">
+    <!-- Central Risk Gauge Card -->
+    <div class="glass-card" style="padding: 26px 30px; border: 1px solid rgba(255, 92, 122, 0.45); box-shadow: var(--shadow-card), var(--glow-critical); position: relative; overflow: hidden;">
+      <div style="position: absolute; top: -30px; right: -30px; width: 140px; height: 140px; background: radial-gradient(circle, rgba(255, 92, 122, 0.15) 0%, transparent 70%); pointer-events: none;"></div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+        <div class="tech-label" style="color: var(--critical-red); font-size: 0.78rem;">REAL-TIME THREAT CORE</div>
+        <span class="badge badge-critical">AUTONOMOUS FORECAST</span>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
+        <!-- Circular Donut Gauge Container -->
+        <div id="crisis-gauge-container"></div>
+
+        <!-- Crisis Occurrence Summary -->
+        <div style="display: flex; flex-direction: column; gap: 14px; min-width: 200px;">
+          <div style="background: rgba(255, 92, 122, 0.1); border: 1px solid rgba(255, 92, 122, 0.3); border-radius: var(--radius-sm); padding: 14px 18px;">
+            <div class="tech-label" style="color: var(--critical-red);">PREDICTED OCCURRENCE</div>
+            <div class="mono-val" style="font-size: 2.1rem; font-weight: 800; color: #FFFFFF; line-height: 1.1; margin-top: 4px;">
+              1.5 HOURS
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Estimated Timestamp: 15:30 UTC</div>
+          </div>
+
+          <div style="background: rgba(7, 17, 31, 0.8); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 14px 18px;">
+            <div class="tech-label">EXPECTED ENERGY DEFICIT</div>
+            <div class="mono-val" style="font-size: 1.9rem; font-weight: 800; color: var(--critical-red); line-height: 1.1; margin-top: 4px;">
+              -33 kW
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">Demand exceeds generation + safe discharge</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommended Response Action Card -->
+    <div class="glass-card" style="padding: 26px 30px; display: flex; flex-direction: column; justify-content: space-between; border-color: rgba(85, 214, 255, 0.35); background: linear-gradient(145deg, rgba(16, 31, 51, 0.85) 0%, rgba(11, 23, 40, 0.95) 100%);">
+      <div>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+          <span class="tech-label" style="color: var(--primary-cyan); font-size: 0.78rem;">AI MITIGATION RECOMMENDATION</span>
+          <span class="badge badge-safe">PROTECTS ALL CRITICAL LOADS</span>
+        </div>
+
+        <h2 style="font-size: 1.35rem; color: var(--text-highlight); margin-bottom: 10px; line-height: 1.3;">
+          Reduce or Delay Non-Critical Auxiliary Loads
+        </h2>
+
+        <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 18px;">
+          The AI decision engine recommends deferring the scheduled secondary greywater heating cycle 
+          (<strong style="color: var(--text-highlight);">10 kW</strong>) and dimming station walkway lighting by 50% 
+          (<strong style="color: var(--text-highlight);">6 kW</strong>). This eliminates the projected 33 kW deficit and extends safe battery survival buffer.
+        </p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+          <div style="background: rgba(7, 17, 31, 0.6); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            <div class="tech-label">POTENTIAL POWER SAVING</div>
+            <div class="mono-val" style="font-size: 1.4rem; font-weight: 700; color: var(--success-aurora); margin-top: 2px;">+16 kW</div>
+          </div>
+          <div style="background: rgba(7, 17, 31, 0.6); padding: 12px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            <div class="tech-label">RESERVE EXTENSION</div>
+            <div class="mono-val" style="font-size: 1.4rem; font-weight: 700; color: var(--primary-cyan); margin-top: 2px;">+2.5 Hours</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button that triggers Connected Demo Journey -->
+      <div>
+        <div style="text-align: center; margin-top: 8px; font-size: 0.72rem; color: var(--text-muted); font-family: var(--font-mono);">
+          Virtual sandbox mode &bull; Live station grid will not be altered
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supply vs Demand Large Deficit Chart -->
+  <div class="chart-card glass-card" style="margin-bottom: 24px;">
+    <div class="chart-card-header">
+      <div class="chart-title-group">
+        <span class="tech-label" style="color: var(--critical-red);">SUPPLY DEFICIT MODEL</span>
+        <h3 class="chart-title">Supply vs Demand Forecast & Deficit Crossover</h3>
+        <span class="chart-subtitle">Direct visualization of predicted shortage zone (+1h to +4h)</span>
+      </div>
+      <div class="chart-legend">
+        <div class="chart-legend-item"><span class="legend-line supply"></span> Available Supply (70–75 kW)</div>
+        <div class="chart-legend-item"><span class="legend-line predicted"></span> Predicted Demand (90–115 kW)</div>
+        <div class="chart-legend-item" style="color: var(--critical-red); font-weight: 600;">⚠ Shaded = 33 kW Deficit</div>
+      </div>
+    </div>
+    <div class="chart-container chart-container-lg" id="crisis-supply-demand-chart"></div>
+  </div>
+
+  <!-- Risk Timeline Section -->
+  <div id="crisis-risk-timeline-container" style="margin-bottom: 28px;"></div>
+
+  <!-- Why Is The Risk High? 3 Root Cause Cards -->
+  <div style="margin-bottom: 24px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 14px;">
+      <span class="tech-label" style="color: var(--critical-red);">DIAGNOSTIC EXPLANATION</span>
+      <h3 style="font-size: 1.15rem; color: var(--text-highlight);">Why is the Station Risk High?</h3>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+      <!-- Cause 1: Increasing Demand -->
+      <div class="glass-card" style="padding: 20px 22px; border-left: 4px solid var(--critical-red);">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <div style="width: 32px; height: 32px; border-radius: var(--radius-sm); background: rgba(255, 92, 122, 0.15); display: flex; align-items: center; justify-content: center; color: var(--critical-red);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+          </div>
+          <div>
+            <span class="badge badge-critical" style="font-size: 0.68rem;">CAUSE 01</span>
+            <h4 style="font-size: 0.95rem; margin-top: 2px;">Increasing Demand</h4>
+          </div>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
+          Exterior temperature drop to <strong style="color: var(--text-highlight);">-20°C (feels like -34°C)</strong> has triggered continuous multi-stage habitat heating coil cycles plus simultaneous cryogenic laboratory freezer operations (+18 kW).
+        </p>
+      </div>
+
+      <!-- Cause 2: Low Renewable Generation -->
+      <div class="glass-card" style="padding: 20px 22px; border-left: 4px solid #FF8557;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <div style="width: 32px; height: 32px; border-radius: var(--radius-sm); background: rgba(255, 133, 87, 0.15); display: flex; align-items: center; justify-content: center; color: #FF8557;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2"/></svg>
+          </div>
+          <div>
+            <span class="badge badge-high" style="font-size: 0.68rem;">CAUSE 02</span>
+            <h4 style="font-size: 0.95rem; margin-top: 2px;">Low Renewable Generation</h4>
+          </div>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
+          Complete polar night darkness supplies <strong style="color: var(--text-highlight);">0 W/m² solar output</strong>. Wind speed forecast is decelerating from 9.2 m/s down to 5.1 m/s, suppressing turbine generation to just 22 kW.
+        </p>
+      </div>
+
+      <!-- Cause 3: Declining Reserve Buffer -->
+      <div class="glass-card" style="padding: 20px 22px; border-left: 4px solid var(--warning-amber);">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <div style="width: 32px; height: 32px; border-radius: var(--radius-sm); background: rgba(255, 200, 87, 0.15); display: flex; align-items: center; justify-content: center; color: var(--warning-amber);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="6" width="18" height="12" rx="2"/><line x1="23" y1="13" x2="23" y2="11"/></svg>
+          </div>
+          <div>
+            <span class="badge badge-warning" style="font-size: 0.68rem;">CAUSE 03</span>
+            <h4 style="font-size: 0.95rem; margin-top: 2px;">Declining Reserve Buffer</h4>
+          </div>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.45;">
+          Battery storage is currently at <strong style="color: var(--text-highlight);">35% SOC (175 kWh)</strong>. With a net discharge of 65 kW, the battery will breach the mandatory 20% life-support reserve threshold in under 1.8 hours without mitigation.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
