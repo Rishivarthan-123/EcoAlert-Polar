@@ -1,13 +1,19 @@
 /**
  * EcoAlert Polar - Demand Forecast Chart (SVG)
- * Renders actual demand, predicted demand, and peak threshold.
+ * Dynamic SVG plotting for live actual demand, predicted demand, and threshold peak.
  */
 
 window.renderDemandChart = function(containerId, options = {}) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const data = window.ecoState.getState("timeline");
+  const timeline = window.ecoState.getState("timeline") || {};
+  const energy = window.ecoState.getState("energy") || {};
+  
+  const hours = timeline.hours || ["Now", "+1h", "+2h", "+3h", "+4h", "+5h", "+6h"];
+  const predictedDemand = timeline.predictedDemand || [90, 108, 114, 111, 104, 98, 92];
+  const actualVal = Number(energy.currentDemand ?? predictedDemand[0] ?? 90);
+
   const width = container.clientWidth || 540;
   const height = 220;
   const padLeft = 45;
@@ -18,14 +24,23 @@ window.renderDemandChart = function(containerId, options = {}) {
   const plotW = width - padLeft - padRight;
   const plotH = height - padTop - padBottom;
 
-  const minVal = 60;
-  const maxVal = 130;
+  const allVals = [...predictedDemand, actualVal];
+  const rawMin = Math.min(...allVals);
+  const rawMax = Math.max(...allVals);
 
-  const getX = (i) => padLeft + (i / (data.hours.length - 1)) * plotW;
-  const getY = (val) => padTop + plotH - ((val - minVal) / (maxVal - minVal)) * plotH;
+  const minVal = Math.max(0, Math.floor(rawMin * 0.75 / 10) * 10);
+  const maxVal = Math.max(120, Math.ceil(rawMax * 1.25 / 10) * 10);
 
-  // Generate grid lines
-  const gridSteps = [70, 90, 110, 130];
+  const getX = (i) => padLeft + (i / Math.max(hours.length - 1, 1)) * plotW;
+  const getY = (val) => padTop + plotH - ((val - minVal) / Math.max(maxVal - minVal, 1)) * plotH;
+
+  // Generate dynamic grid steps (4 levels)
+  const stepSize = Math.max(10, Math.round((maxVal - minVal) / 4 / 10) * 10);
+  const gridSteps = [];
+  for (let s = minVal + stepSize; s < maxVal; s += stepSize) {
+    gridSteps.push(s);
+  }
+
   let gridSvg = "";
   gridSteps.forEach(step => {
     const y = getY(step);
@@ -37,7 +52,7 @@ window.renderDemandChart = function(containerId, options = {}) {
 
   // Generate X axis labels
   let xLabelsSvg = "";
-  data.hours.forEach((hr, i) => {
+  hours.forEach((hr, i) => {
     const x = getX(i);
     xLabelsSvg += `
       <text x="${x}" y="${height - 8}" text-anchor="middle" class="chart-axis-text">${hr}</text>
@@ -45,36 +60,37 @@ window.renderDemandChart = function(containerId, options = {}) {
   });
 
   // Predicted Demand Curve Path (Smooth spline)
-  let predD = `M ${getX(0)} ${getY(data.predictedDemand[0])}`;
-  for (let i = 1; i < data.predictedDemand.length; i++) {
+  let predD = `M ${getX(0)} ${getY(predictedDemand[0])}`;
+  for (let i = 1; i < predictedDemand.length; i++) {
     const prevX = getX(i - 1);
-    const prevY = getY(data.predictedDemand[i - 1]);
+    const prevY = getY(predictedDemand[i - 1]);
     const currX = getX(i);
-    const currY = getY(data.predictedDemand[i]);
+    const currY = getY(predictedDemand[i]);
     const midX = (prevX + currX) / 2;
     predD += ` C ${midX} ${prevY}, ${midX} ${currY}, ${currX} ${currY}`;
   }
 
-  // Peak Threshold Line (115 kW)
-  const peakY = getY(115);
+  // Peak Threshold Line (Calculated as 110% of max predicted or nominal + margin)
+  const peakVal = Math.round(Math.max(...predictedDemand, 110));
+  const peakY = getY(peakVal);
   const peakLineSvg = `
     <line x1="${padLeft}" y1="${peakY}" x2="${width - padRight}" y2="${peakY}" class="chart-line-peak" />
-    <text x="${width - padRight - 4}" y="${peakY - 6}" text-anchor="end" class="chart-axis-text" fill="var(--critical-red)">PEAK 115 kW</text>
+    <text x="${width - padRight - 4}" y="${peakY - 6}" text-anchor="end" class="chart-axis-text" fill="var(--critical-red)">PEAK ${peakVal} kW</text>
   `;
 
   // Nodes for prediction points
   let nodesSvg = "";
-  data.predictedDemand.forEach((val, i) => {
+  predictedDemand.forEach((val, i) => {
     const cx = getX(i);
     const cy = getY(val);
     nodesSvg += `
-      <circle cx="${cx}" cy="${cy}" r="4" class="chart-node chart-node-predicted" data-val="${val}" data-hr="${data.hours[i]}" />
+      <circle cx="${cx}" cy="${cy}" r="4" class="chart-node chart-node-predicted" data-val="${val} kW" data-hr="${hours[i]}" />
     `;
   });
 
-  // Current Actual Demand Node at index 0 (Now = 90 kW)
+  // Current Actual Demand Node at index 0 (Live Actual Value)
   const actualNodeSvg = `
-    <circle cx="${getX(0)}" cy="${getY(90)}" r="6" class="chart-node" style="stroke: var(--primary-cyan); fill: #FFFFFF;" data-val="90 kW (Actual)" data-hr="Now" />
+    <circle cx="${getX(0)}" cy="${getY(actualVal)}" r="6" class="chart-node" style="stroke: var(--primary-cyan); fill: #FFFFFF;" data-val="${actualVal.toFixed(1)} kW (Actual)" data-hr="Now" />
   `;
 
   container.innerHTML = `
@@ -87,7 +103,7 @@ window.renderDemandChart = function(containerId, options = {}) {
       </defs>
       ${gridSvg}
       ${peakLineSvg}
-      <path d="${predD} L ${getX(data.hours.length - 1)} ${height - padBottom} L ${getX(0)} ${height - padBottom} Z" fill="url(#predAreaGrad)" />
+      <path d="${predD} L ${getX(hours.length - 1)} ${height - padBottom} L ${getX(0)} ${height - padBottom} Z" fill="url(#predAreaGrad)" />
       <path d="${predD}" class="chart-line-predicted" />
       ${xLabelsSvg}
       ${nodesSvg}
@@ -100,10 +116,11 @@ window.renderDemandChart = function(containerId, options = {}) {
   const tooltip = document.getElementById(`tooltip-${containerId}`);
   const nodes = container.querySelectorAll(".chart-node");
   nodes.forEach(node => {
-    node.addEventListener("mouseenter", (e) => {
+    node.addEventListener("mouseenter", () => {
+      if (!tooltip) return;
       const val = node.getAttribute("data-val");
       const hr = node.getAttribute("data-hr");
-      tooltip.textContent = `${hr}: ${val} kW`;
+      tooltip.textContent = `${hr}: ${val}`;
       tooltip.classList.add("visible");
       const rect = node.getBoundingClientRect();
       const contRect = container.getBoundingClientRect();
@@ -111,7 +128,7 @@ window.renderDemandChart = function(containerId, options = {}) {
       tooltip.style.top = `${rect.top - contRect.top}px`;
     });
     node.addEventListener("mouseleave", () => {
-      tooltip.classList.remove("visible");
+      if (tooltip) tooltip.classList.remove("visible");
     });
   });
 };

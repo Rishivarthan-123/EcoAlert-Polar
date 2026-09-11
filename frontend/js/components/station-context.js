@@ -136,6 +136,8 @@ class EcoStationContext {
 
   update() {
     const state = window.ecoState.getState();
+    const stationEl = document.getElementById("ctx-station");
+    const zoneEl = document.getElementById("ctx-zone");
     const tempEl = document.getElementById("ctx-temp");
     const windEl = document.getElementById("ctx-wind");
     const crewEl = document.getElementById("ctx-crew");
@@ -144,16 +146,24 @@ class EcoStationContext {
     const renEl = document.getElementById("ctx-renewable");
     const genEl = document.getElementById("ctx-generator");
 
+    if (stationEl) stationEl.textContent = state.station?.code || "POLAR-MAIN";
+    if (zoneEl) {
+      // Extract short zone label
+      const zone = state.station?.zone || "Research Alpha";
+      const shortZone = zone.includes("Zone") ? zone.split("Zone")[1].trim() : zone.split(" ").slice(-2).join(" ");
+      zoneEl.textContent = shortZone;
+    }
     if (tempEl) tempEl.textContent = `${state.environment.temperature}°C`;
     if (windEl) windEl.textContent = `${state.environment.windSpeed} m/s`;
     if (crewEl) crewEl.textContent = `${state.occupancy.current} Researchers`;
     if (demandEl) demandEl.textContent = `${state.energy.currentDemand} kW`;
     if (batteryEl) {
-      batteryEl.textContent = `${state.energy.battery.soc}% (${state.energy.battery.availableKwh} kWh)`;
-      batteryEl.className = `context-val ${state.energy.battery.soc < 40 ? 'accent-amber' : 'accent-green'}`;
+      const batt = state.energy?.battery || {};
+      batteryEl.textContent = `${batt.soc ?? 35}% (${batt.availableKwh ?? 175} kWh)`;
+      batteryEl.className = `context-val ${(batt.soc ?? 35) < 40 ? 'accent-amber' : 'accent-green'}`;
     }
     if (renEl) renEl.textContent = `${state.energy.renewableGeneration} kW`;
-    if (genEl) genEl.textContent = state.energy.generator.status;
+    if (genEl) genEl.textContent = state.energy?.generator?.status || "AVAILABLE";
   }
 }
 

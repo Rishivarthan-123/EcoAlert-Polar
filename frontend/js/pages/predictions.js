@@ -12,6 +12,7 @@ class EcoPredictionsPage {
   mount() {
     this.renderCharts();
     this.bindControls();
+    this.bindSubscriptions();
   }
 
   renderCharts() {
@@ -23,6 +24,12 @@ class EcoPredictionsPage {
         window.renderRenewableChart("predictions-renewable-chart");
       }
     });
+  }
+
+  bindSubscriptions() {
+    window.ecoState.subscribe("timeline", () => this.renderCharts());
+    window.ecoState.subscribe("energy", () => this.renderCharts());
+    window.ecoState.subscribe("station", () => this.renderCharts());
   }
 
   bindControls() {
@@ -37,14 +44,18 @@ class EcoPredictionsPage {
         const labelEl = document.getElementById("pred-page-horizon-label");
         if (labelEl) labelEl.textContent = this.currentHorizon.toUpperCase();
 
-        const pred = await window.ECO_API.getDemandPrediction(this.currentHorizon, this.currentScenario);
-        const demandValEl = document.getElementById("pred-page-demand");
-        const peakValEl = document.getElementById("pred-page-peak");
+        try {
+          const pred = await window.ECO_API.getDemandPrediction(this.currentHorizon, this.currentScenario);
+          const demandValEl = document.getElementById("pred-page-demand");
+          const peakValEl = document.getElementById("pred-page-peak");
 
-        if (demandValEl) demandValEl.textContent = `${pred.predictedDemandKw} kW`;
-        if (peakValEl) peakValEl.textContent = `${pred.peakDemandKw} kW`;
+          if (demandValEl) demandValEl.textContent = `${pred.predictedDemandKw} kW`;
+          if (peakValEl) peakValEl.textContent = `${pred.peakDemandKw} kW`;
 
-        window.ecoToast.info("Horizon Updated", `Demand model recalibrated for ${this.currentHorizon} forecast.`);
+          window.ecoToast.info("Horizon Updated", `Demand model recalibrated for ${this.currentHorizon} forecast.`);
+        } catch (err) {
+          console.warn("Demand prediction call failed:", err);
+        }
       });
     });
 
@@ -67,6 +78,7 @@ class EcoPredictionsPage {
         btn.classList.add("active");
         this.currentRenewableType = btn.getAttribute("data-type");
         window.ecoToast.info("Array Focus", `Highlighting ${this.currentRenewableType.toUpperCase()} generation arrays.`);
+        this.renderCharts();
       });
     });
   }

@@ -153,7 +153,10 @@ class EcoStateStore {
     const pDemand = Number(energy.predictedDemand ?? 108);
     const ren = Number(energy.renewableGeneration ?? 25);
     const pRen = Number(energy.renewableForecast ?? 22);
+    const wind = Number(energy.windGeneration ?? ren);
+    const solar = Number(energy.solarGeneration ?? 0);
     const soc = Number(battery.soc ?? 35);
+    const generatorStatus = energy.generator?.status || "AVAILABLE";
 
     // Build responsive 6-hour timeline
     const hours = ["Now", "+1h", "+2h", "+3h", "+4h", "+5h", "+6h"];
@@ -170,13 +173,33 @@ class EcoStateStore {
     ];
 
     const availableSupply = [
-      ren + (soc > 20 ? 50 : 0),
-      pRen + (soc > 20 ? 50 : 0),
-      Math.round(pRen * 0.9) + (soc > 20 ? 45 : 0),
+      ren + (soc > 20 ? 50 : (generatorStatus === "RUNNING" ? 80 : 0)),
+      pRen + (soc > 20 ? 50 : (generatorStatus === "RUNNING" ? 80 : 0)),
+      Math.round(pRen * 0.9) + (soc > 20 ? 45 : (generatorStatus === "RUNNING" ? 75 : 0)),
       Math.round(pRen * 0.85) + 40,
       Math.round(pRen * 0.9) + 40,
       Math.round(pRen * 1.0) + 45,
       Math.round(pRen * 1.1) + 50
+    ];
+
+    const windGeneration = [
+      wind,
+      Math.round(wind * 0.92),
+      Math.round(wind * 0.84),
+      Math.round(wind * 0.76),
+      Math.round(wind * 0.88),
+      Math.round(wind * 0.95),
+      Math.round(wind * 1.05)
+    ];
+
+    const solarGeneration = [
+      solar,
+      Math.round(solar * 1.1),
+      Math.round(solar * 1.2),
+      Math.round(solar * 1.0),
+      Math.round(solar * 0.5),
+      0,
+      0
     ];
 
     const renewableForecast = [
@@ -202,6 +225,10 @@ class EcoStateStore {
       batterySocForecast.push(bSoc);
     }
 
+    // Dynamic risk timeline step labels based on deficit calculation
+    const maxDeficit = Math.max(0, ...predictedDemand.map((d, idx) => d - availableSupply[idx]));
+    const mode = this.state.station?.operatingMode || "NORMAL";
+
     this.state.timeline = {
       hours,
       actualDemand,
@@ -209,13 +236,15 @@ class EcoStateStore {
       peakDemandLine: Array(7).fill(Math.round(Math.max(...predictedDemand) + 7)),
       availableSupply,
       renewableForecast,
+      windGeneration,
+      solarGeneration,
       batterySocForecast,
       riskTimeline: [
-        { step: "NOW", time: "14:00", level: "WARNING", label: "Monitoring Baseline" },
-        { step: "+30m", time: "14:30", level: "HIGH", label: "Demand Spiking" },
-        { step: "+1h", time: "15:00", level: "HIGH", label: "Wind Decreasing" },
-        { step: "+1.5h", time: "15:30", level: "CRITICAL", label: `Predicted Shortage Deficit ${Math.abs(Math.min(0, ren - demand))} kW` },
-        { step: "+2h", time: "16:00", level: "SHORTAGE", label: "Battery Under Reserve Buffer" }
+        { step: "NOW", time: "14:00", level: mode === "CRITICAL" ? "CRITICAL" : "WARNING", label: `Current Grid State (${demand} kW)` },
+        { step: "+30m", time: "14:30", level: pDemand > demand ? "HIGH" : "SAFE", label: `Demand Trend: ${pDemand} kW` },
+        { step: "+1h", time: "15:00", level: wind < 20 ? "HIGH" : "SAFE", label: `Wind Array Output ${wind} kW` },
+        { step: "+1.5h", time: "15:30", level: maxDeficit > 0 ? "CRITICAL" : "SAFE", label: maxDeficit > 0 ? `Deficit Gap ${maxDeficit} kW` : "Supply Reserves Stable" },
+        { step: "+2h", time: "16:00", level: batterySocForecast[2] < 20 ? "SHORTAGE" : "SAFE", label: `Battery Buffer ${batterySocForecast[2]}%` }
       ]
     };
   }

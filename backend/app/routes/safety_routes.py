@@ -3,6 +3,7 @@ from typing import Any, Dict
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
+from app.services.history_service import create_log
 from app.services.safety_service import (
     evaluate_safety,
     process_operator_decision,
@@ -120,6 +121,21 @@ def operator_decision(
             operator_name=data.operatorName,
             notes=data.notes,
         )
+
+        try:
+            create_log(
+                event_type="Operator Action Authorized" if result.get("approved") else "Operator Action Rejected",
+                source="Safety Guardian",
+                status="success" if result.get("approved") else "rejected",
+                details={
+                    "operator": data.operatorName,
+                    "action": data.safety.get("action", "reduce_load"),
+                    "decisionStatus": result.get("decisionStatus", ""),
+                    "notes": data.notes
+                }
+            )
+        except Exception:
+            pass
 
         return {
             "status": "success",

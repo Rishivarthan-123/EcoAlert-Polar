@@ -156,9 +156,9 @@ class EcoOverviewPage {
         currentPriority: load.priority || "NON-CRITICAL",
         recommendedPriority: load.priority || "NON-CRITICAL",
         action: load.priority === "CRITICAL" ? "PROTECT" : (load.canShed ? "REDUCE" : "MAINTAIN"),
-        reason: load.critical
+        reason: load.reason || (load.critical
           ? "Critical station service must remain protected."
-          : (load.canShed ? "Load can be reduced during energy shortage." : "Essential station service should remain active.")
+          : (load.canShed ? "Load can be reduced during energy shortage." : "Essential station service should remain active."))
       }));
 
       const currentDemand = Number(backendEnergy.currentDemand ?? currentEnergy.currentDemand ?? 90);
@@ -341,6 +341,20 @@ class EcoOverviewPage {
     }
 
     window.ecoState.subscribe("energy", () => {
+      this.updateKPIs();
+      this.updateEnergyBus();
+      this.updateAIIntelligence();
+    });
+
+    window.ecoState.subscribe("timeline", () => {
+      requestAnimationFrame(() => {
+        if (window.renderDemandChart) window.renderDemandChart("overview-demand-chart");
+        if (window.renderSupplyDemandChart) window.renderSupplyDemandChart("overview-supply-demand-chart");
+        if (window.renderBatteryChart) window.renderBatteryChart("overview-battery-chart");
+      });
+    });
+
+    window.ecoState.subscribe("station", () => {
       this.updateKPIs();
       this.updateEnergyBus();
       this.updateAIIntelligence();

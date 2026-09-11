@@ -8,7 +8,8 @@ async def test_all():
         print("--- 1. Health Checks ---")
         res = await client.get("/")
         assert res.status_code == 200, f"Root failed: {res.text}"
-        print("Root GET / ->", res.json())
+        assert "<!DOCTYPE html>" in res.text or "<html" in res.text.lower()
+        print("Root GET / -> HTML Index Served (200 OK)")
 
         res = await client.get("/health")
         assert res.status_code == 200

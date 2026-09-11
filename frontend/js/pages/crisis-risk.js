@@ -10,16 +10,18 @@ class EcoCrisisRiskPage {
 
   mount() {
     this.renderVisuals();
+    this.bindEvents();
     this.initialized = true;
   }
 
   renderVisuals() {
     const state = window.ecoState.getState();
+    const risk = state.risk || {};
 
     requestAnimationFrame(() => {
-      // 1. Render 78% Circular Donut Risk Gauge
+      // 1. Render Circular Donut Risk Gauge
       if (window.renderRiskGauge) {
-        window.renderRiskGauge("crisis-gauge-container", state.risk.score, state.risk.level);
+        window.renderRiskGauge("crisis-gauge-container", risk.score || 0, risk.level || "NORMAL");
       }
 
       // 2. Render Large Supply vs Demand Deficit Chart
@@ -34,6 +36,11 @@ class EcoCrisisRiskPage {
     });
   }
 
+  bindEvents() {
+    window.ecoState.subscribe("risk", () => this.renderVisuals());
+    window.ecoState.subscribe("timeline", () => this.renderVisuals());
+    window.ecoState.subscribe("station", () => this.renderVisuals());
+  }
 }
 
 window.EcoCrisisRiskPage = EcoCrisisRiskPage;

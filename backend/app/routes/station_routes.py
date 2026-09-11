@@ -7,6 +7,7 @@ from typing import Any, Dict
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
+from app.services.history_service import create_log
 from app.services.station_service import (
     get_energy_snapshot,
     get_station_state,
@@ -71,6 +72,19 @@ def update_station_telemetry(
         updated_state = update_station_state(
             payload.data
         )
+
+        try:
+            create_log(
+                event_type="Station Telemetry Updated",
+                source="Telemetry",
+                status="success",
+                details={
+                    "updatedKeys": list(payload.data.keys()),
+                    "source": "LIVE_BACKEND_TELEMETRY"
+                }
+            )
+        except Exception:
+            pass
 
         return {
             "status": "success",

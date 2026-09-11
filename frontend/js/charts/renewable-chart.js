@@ -1,13 +1,20 @@
 /**
  * EcoAlert Polar - Renewable Energy Prediction Chart (SVG)
- * Plots wind turbine and solar arrays generation and forecast.
+ * Dynamic SVG plotting for wind turbine and solar array generation.
  */
 
 window.renderRenewableChart = function(containerId, options = {}) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const data = window.ecoState.getState("timeline");
+  const timeline = window.ecoState.getState("timeline") || {};
+  const energy = window.ecoState.getState("energy") || {};
+
+  const hours = timeline.hours || ["Now", "+1h", "+2h", "+3h", "+4h", "+5h", "+6h"];
+  const windGen = timeline.windGeneration || [25, 23, 21, 19, 22, 24, 26];
+  const solarGen = timeline.solarGeneration || [0, 0, 0, 0, 0, 0, 0];
+  const currentSolar = Number(energy.solarGeneration ?? solarGen[0] ?? 0);
+
   const width = container.clientWidth || 540;
   const height = 220;
   const padLeft = 45;
@@ -18,14 +25,20 @@ window.renderRenewableChart = function(containerId, options = {}) {
   const plotW = width - padLeft - padRight;
   const plotH = height - padTop - padBottom;
 
+  const allVals = [...windGen, ...solarGen];
+  const maxVal = Math.max(40, Math.ceil(Math.max(...allVals) * 1.25 / 10) * 10);
   const minVal = 0;
-  const maxVal = 40;
 
-  const getX = (i) => padLeft + (i / (data.hours.length - 1)) * plotW;
-  const getY = (val) => padTop + plotH - ((val - minVal) / (maxVal - minVal)) * plotH;
+  const getX = (i) => padLeft + (i / Math.max(hours.length - 1, 1)) * plotW;
+  const getY = (val) => padTop + plotH - ((val - minVal) / Math.max(maxVal - minVal, 1)) * plotH;
 
-  // Grid lines
-  const gridSteps = [0, 10, 20, 30, 40];
+  // Dynamic Grid steps
+  const stepSize = Math.max(10, Math.round(maxVal / 4 / 10) * 10);
+  const gridSteps = [];
+  for (let s = 0; s <= maxVal; s += stepSize) {
+    gridSteps.push(s);
+  }
+
   let gridSvg = "";
   gridSteps.forEach(step => {
     const y = getY(step);
@@ -37,38 +50,55 @@ window.renderRenewableChart = function(containerId, options = {}) {
 
   // X axis labels
   let xLabelsSvg = "";
-  data.hours.forEach((hr, i) => {
+  hours.forEach((hr, i) => {
     const x = getX(i);
     xLabelsSvg += `
       <text x="${x}" y="${height - 8}" text-anchor="middle" class="chart-axis-text">${hr}</text>
     `;
   });
 
-  // Wind Generation Path
-  let windD = `M ${getX(0)} ${getY(data.windGeneration[0])}`;
-  for (let i = 1; i < data.windGeneration.length; i++) {
+  // Wind Generation Path (Smooth spline)
+  let windD = `M ${getX(0)} ${getY(windGen[0])}`;
+  for (let i = 1; i < windGen.length; i++) {
     const prevX = getX(i - 1);
-    const prevY = getY(data.windGeneration[i - 1]);
+    const prevY = getY(windGen[i - 1]);
     const currX = getX(i);
-    const currY = getY(data.windGeneration[i]);
+    const currY = getY(windGen[i]);
     const midX = (prevX + currX) / 2;
     windD += ` C ${midX} ${prevY}, ${midX} ${currY}, ${currX} ${currY}`;
   }
 
-  // Solar Baseline (Flat 0 kW in Polar Winter)
-  const solarY = getY(0);
-  const solarLineSvg = `
-    <line x1="${padLeft}" y1="${solarY}" x2="${width - padRight}" y2="${solarY}" stroke="#FFC857" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.4" />
-    <text x="${width - padRight - 4}" y="${solarY - 6}" text-anchor="end" class="chart-axis-text" fill="#FFC857">SOLAR: 0 kW (Polar Night)</text>
-  `;
+  // Solar Line (Dynamic - shows Polar Night note if 0 kW, or curve if active)
+  let solarLineSvg = "";
+  if (currentSolar === 0 && solarGen.every(v => v === 0)) {
+    const solarY = getY(0);
+    solarLineSvg = `
+      <line x1="${padLeft}" y1="${solarY}" x2="${width - padRight}" y2="${solarY}" stroke="#FFC857" stroke-width="1.5" stroke-dasharray="4 2" opacity="0.5" />
+      <text x="${width - padRight - 4}" y="${solarY - 6}" text-anchor="end" class="chart-axis-text" fill="#FFC857">SOLAR: 0 kW (Polar Night)</text>
+    `;
+  } else {
+    let solarD = `M ${getX(0)} ${getY(solarGen[0])}`;
+    for (let i = 1; i < solarGen.length; i++) {
+      const prevX = getX(i - 1);
+      const prevY = getY(solarGen[i - 1]);
+      const currX = getX(i);
+      const currY = getY(solarGen[i]);
+      const midX = (prevX + currX) / 2;
+      solarD += ` C ${midX} ${prevY}, ${midX} ${currY}, ${currX} ${currY}`;
+    }
+    solarLineSvg = `
+      <path d="${solarD}" stroke="#FFC857" stroke-width="2" fill="none" stroke-dasharray="5 3" />
+      <text x="${width - padRight - 4}" y="${getY(solarGen[0]) - 6}" text-anchor="end" class="chart-axis-text" fill="#FFC857">SOLAR: ${currentSolar} kW Active</text>
+    `;
+  }
 
-  // Nodes for wind
+  // Wind Interactive Nodes
   let nodesSvg = "";
-  data.windGeneration.forEach((val, i) => {
+  windGen.forEach((val, i) => {
     const cx = getX(i);
     const cy = getY(val);
     nodesSvg += `
-      <circle cx="${cx}" cy="${cy}" r="4" class="chart-node" style="stroke: var(--primary-cyan); fill: #0B1728;" data-val="${val} kW Wind" data-hr="${data.hours[i]}" />
+      <circle cx="${cx}" cy="${cy}" r="4" class="chart-node" style="stroke: var(--primary-cyan); fill: #0B1728;" data-val="${val} kW Wind" data-hr="${hours[i]}" />
     `;
   });
 
@@ -82,7 +112,7 @@ window.renderRenewableChart = function(containerId, options = {}) {
       </defs>
       ${gridSvg}
       ${solarLineSvg}
-      <path d="${windD} L ${getX(data.hours.length - 1)} ${getY(0)} L ${getX(0)} ${getY(0)} Z" fill="url(#windAreaGrad)" />
+      <path d="${windD} L ${getX(hours.length - 1)} ${getY(0)} L ${getX(0)} ${getY(0)} Z" fill="url(#windAreaGrad)" />
       <path d="${windD}" class="chart-line-actual" />
       ${xLabelsSvg}
       ${nodesSvg}
@@ -95,6 +125,7 @@ window.renderRenewableChart = function(containerId, options = {}) {
   const nodes = container.querySelectorAll(".chart-node");
   nodes.forEach(node => {
     node.addEventListener("mouseenter", () => {
+      if (!tooltip) return;
       const val = node.getAttribute("data-val");
       const hr = node.getAttribute("data-hr");
       tooltip.textContent = `${hr}: ${val}`;
@@ -105,7 +136,7 @@ window.renderRenewableChart = function(containerId, options = {}) {
       tooltip.style.top = `${rect.top - contRect.top}px`;
     });
     node.addEventListener("mouseleave", () => {
-      tooltip.classList.remove("visible");
+      if (tooltip) tooltip.classList.remove("visible");
     });
   });
 };

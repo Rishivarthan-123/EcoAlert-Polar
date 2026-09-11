@@ -78,7 +78,7 @@ window.renderBatteryChart = function(containerId, options = {}) {
   const plotH = height - padTop - padBottom;
 
   const minVal = 0;
-  const maxVal = 50;
+  const maxVal = 100;
 
   // Prevent division-by-zero if there is only one point.
   const pointCount = data.hours.length;
@@ -98,7 +98,7 @@ window.renderBatteryChart = function(containerId, options = {}) {
   // Grid lines
   // ---------------------------------------------------------
 
-  const gridSteps = [0, 10, 20, 30, 40, 50];
+  const gridSteps = [0, 25, 50, 75, 100];
 
   let gridSvg = "";
 

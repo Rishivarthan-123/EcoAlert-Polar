@@ -1,5 +1,5 @@
 /**
- * EcoAlert Polar - Circular Risk Donut Gauge & Risk Timeline
+ * EcoAlert Polar - Circular Risk Donut Gauge & Dynamic Risk Timeline
  * Signature visualization for the Crisis & Risk Intelligence screen.
  */
 
@@ -7,11 +7,26 @@ window.renderRiskGauge = function(containerId, score = 78, level = "HIGH") {
   const container = document.getElementById(containerId);
   if (!container) return;
 
+  const numericScore = Number(score) || 0;
   const radius = 90;
   const circumference = 2 * Math.PI * radius; // ~565.48
-  const offset = circumference - (score / 100) * circumference;
+  const offset = Math.max(0, circumference - (numericScore / 100) * circumference);
 
-  const isHighOrCritical = level === "HIGH" || level === "CRITICAL";
+  const upperLevel = String(level || "HIGH").toUpperCase();
+  const isHighOrCritical = upperLevel === "HIGH" || upperLevel === "CRITICAL";
+
+  let badgeClass = "badge-safe";
+  let dotClass = "live";
+  if (upperLevel === "CRITICAL") {
+    badgeClass = "badge-critical";
+    dotClass = "critical";
+  } else if (upperLevel === "HIGH") {
+    badgeClass = "badge-high";
+    dotClass = "warning";
+  } else if (upperLevel === "WARNING") {
+    badgeClass = "badge-warning";
+    dotClass = "warning";
+  }
 
   container.innerHTML = `
     <div class="risk-gauge-container">
@@ -34,10 +49,10 @@ window.renderRiskGauge = function(containerId, score = 78, level = "HIGH") {
 
         <!-- Center Numerical Intelligence -->
         <div class="gauge-center-content">
-          <div class="gauge-percent mono-val">${score}%</div>
+          <div class="gauge-percent mono-val">${numericScore}%</div>
           <div class="gauge-status-badge">
-            <span class="badge ${level === 'CRITICAL' ? 'badge-critical' : 'badge-high'}">
-              <span class="status-dot critical"></span> ${level}
+            <span class="badge ${badgeClass}">
+              <span class="status-dot ${dotClass}"></span> ${upperLevel}
             </span>
           </div>
           <div class="gauge-risk-sub">ENERGY CRISIS INDEX</div>
@@ -51,13 +66,34 @@ window.renderRiskTimeline = function(containerId) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
-  const timelineSteps = [
-    { step: "NOW", time: "14:00", level: "WARNING", status: "Active Observation", isCurrent: true },
-    { step: "+30m", time: "14:30", level: "HIGH", status: "Heating Surge Spike", isCurrent: false },
-    { step: "+1h", time: "15:00", level: "HIGH", status: "Turbine Wind Drop", isCurrent: false },
-    { step: "+1.5h", time: "15:30", level: "CRITICAL", status: "Shortage Deficit (33 kW)", isTransition: true },
-    { step: "+2h", time: "16:00", level: "SHORTAGE", status: "Battery < 20% Safe Buffer", isCriticalEnd: true }
+  const timeline = window.ecoState.getState("timeline") || {};
+  const riskState = window.ecoState.getState("risk") || {};
+  const stepsFromState = timeline.riskTimeline || [];
+
+  const defaultSteps = [
+    { step: "NOW", time: "14:00", level: "WARNING", label: "Active Grid Observation" },
+    { step: "+30m", time: "14:30", level: "HIGH", label: "Heating Demand Spike" },
+    { step: "+1h", time: "15:00", level: "HIGH", label: "Turbine Output Drop" },
+    { step: "+1.5h", time: "15:30", level: "CRITICAL", label: "Shortage Deficit Window" },
+    { step: "+2h", time: "16:00", level: "SHORTAGE", label: "Battery Reserve Low" }
   ];
+
+  const rawSteps = stepsFromState.length > 0 ? stepsFromState : defaultSteps;
+
+  const timelineSteps = rawSteps.map((s, idx) => ({
+    step: s.step || `+${idx * 30}m`,
+    time: s.time || "14:00",
+    level: s.level || "WARNING",
+    status: s.label || s.status || "Monitoring",
+    isCurrent: idx === 0,
+    isTransition: s.level === "CRITICAL" || idx === 3
+  }));
+
+  const mainCrisisText = riskState.level === "CRITICAL"
+    ? "CRITICAL ALERT - IMMEDIATE LOAD SHED REQUIRED"
+    : (riskState.level === "HIGH" ? "HIGH RISK - PREDICTED SHORTAGE" : "NOMINAL - MONITORING GRID");
+
+  const mainBadgeClass = riskState.level === "CRITICAL" ? "badge-critical" : (riskState.level === "HIGH" ? "badge-high" : "badge-safe");
 
   container.innerHTML = `
     <div class="risk-timeline-card glass-card">
@@ -66,7 +102,7 @@ window.renderRiskTimeline = function(containerId) {
           <span class="tech-label" style="color: var(--critical-red);">PREDICTIVE EVENT HORIZON</span>
           <h3 class="chart-title">Station Risk Evolution Timeline</h3>
         </div>
-        <span class="badge badge-critical">CRISIS TRANSITION AT +1.5h</span>
+        <span class="badge ${mainBadgeClass}">${mainCrisisText}</span>
       </div>
 
       <div class="risk-timeline-track">

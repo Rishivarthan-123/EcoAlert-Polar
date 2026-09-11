@@ -9,7 +9,13 @@ class EcoLoadsPage {
 
   mount() {
     this.renderTable();
+    this.bindSubscriptions();
     this.initialized = true;
+  }
+
+  bindSubscriptions() {
+    window.ecoState.subscribe("loads", () => this.renderTable());
+    window.ecoState.subscribe("station", () => this.renderTable());
   }
 
   renderTable() {
@@ -20,13 +26,18 @@ class EcoLoadsPage {
 
     tbody.innerHTML = loads.map(load => {
       const currentBadge =
-        this.getPriorityBadge(load.currentPriority);
+        this.getPriorityBadge(load.currentPriority || load.priority || "ESSENTIAL");
 
       const recBadge =
-        this.getPriorityBadge(load.recommendedPriority);
+        this.getPriorityBadge(load.recommendedPriority || load.priority || "ESSENTIAL");
 
       const actionBadge =
-        this.getActionBadge(load.action);
+        this.getActionBadge(load.action || (load.canShed ? "REDUCE" : "PROTECT"));
+
+      const reason = load.reason ||
+        (load.critical ? "Critical system load — cannot be interrupted under any station condition." :
+        load.canShed ? "Non-critical load — eligible for deferral or reduction during energy shortage events." :
+        "Essential station load — maintained under standard operating protocol.");
 
       return `
         <tr>
@@ -56,7 +67,7 @@ class EcoLoadsPage {
               class="tech-label"
               style="color: var(--text-secondary);"
             >
-              ${load.type}
+              ${load.type || "System"}
             </span>
           </td>
 
@@ -88,7 +99,7 @@ class EcoLoadsPage {
               color: var(--text-secondary);
             "
           >
-            ${load.reason}
+            ${reason}
           </td>
 
           <td>
@@ -204,16 +215,27 @@ class EcoLoadsPage {
           const found =
             loads.find(load => load.id === id);
 
-          if (
-            found &&
-            window.ecoModal &&
-            typeof window.ecoModal.showReasonModal === "function"
-          ) {
-            window.ecoModal.showReasonModal(found);
+          if (found && window.ecoModal && typeof window.ecoModal.showReasonModal === "function") {
+            // Enrich with fallbacks so the modal always has all required fields
+            const enriched = {
+              ...found,
+              currentPriority: found.currentPriority || found.priority || "ESSENTIAL",
+              recommendedPriority: found.recommendedPriority || found.priority || "ESSENTIAL",
+              action: found.action || (found.canShed ? "REDUCE" : "PROTECT"),
+              reason: found.reason ||
+                (found.critical
+                  ? "Critical system load — cannot be interrupted under any station condition."
+                  : found.canShed
+                  ? "Non-critical load — eligible for deferral or reduction during energy shortage events."
+                  : "Essential station load — maintained under standard operating protocol."),
+              canShed: Boolean(found.canShed),
+            };
+            window.ecoModal.showReasonModal(enriched);
           }
         });
       });
   }
+
 }
 
 window.EcoLoadsPage = EcoLoadsPage;   
