@@ -161,17 +161,26 @@ def manage_loads(
 
         if remaining_power >= power:
             status = "maintain"
+            action = "PROTECT"
             supplied_power = power
             remaining_power -= power
         else:
             status = "protected"
+            action = "PROTECT"
             supplied_power = max(0.0, remaining_power)
             remaining_power = 0.0
+
+        rec_priority = "CRITICAL"
+        reason = load.get("reason") or "Safety Guardian Interlock: Life-critical station service protected at 100% capacity."
 
         decisions.append(
             {
                 **load,
                 "status": status,
+                "action": action,
+                "currentPriority": load.get("currentPriority", "CRITICAL"),
+                "recommendedPriority": rec_priority,
+                "reason": reason,
                 "suppliedPowerKw": round(supplied_power, 3),
                 "reductionKw": round(
                     max(0.0, power - supplied_power),
@@ -189,22 +198,37 @@ def manage_loads(
 
         if remaining_power >= power:
             status = "maintain"
+            action = "MAINTAIN" if load.get("priority") == 2 else "MAINTAIN"
             supplied_power = power
             remaining_power -= power
+            rec_priority = "ESSENTIAL" if load.get("priority") == 2 else "NON-CRITICAL"
+            reason = load.get("reason") or "Operating within available power baseline. Maintained active."
 
         elif remaining_power > 0:
             status = "reduce"
+            action = "REDUCE"
             supplied_power = remaining_power
+            red_kw = round(max(0.0, power - supplied_power), 1)
             remaining_power = 0.0
+            rec_priority = "NON-CRITICAL"
+            reason = f"AI Load Balancer: Partial curtailment (-{red_kw} kW) active to balance supply deficit."
 
         else:
             status = "defer"
+            action = "DELAY"
             supplied_power = 0.0
+            remaining_power = 0.0
+            rec_priority = "NON-CRITICAL"
+            reason = f"AI Load Balancer: Equipment load ({power} kW) deferred during shortage to preserve safe battery reserve buffer."
 
         decisions.append(
             {
                 **load,
                 "status": status,
+                "action": action,
+                "currentPriority": load.get("currentPriority", "ESSENTIAL" if load.get("priority") == 2 else "NON-CRITICAL"),
+                "recommendedPriority": rec_priority,
+                "reason": reason,
                 "suppliedPowerKw": round(supplied_power, 3),
                 "reductionKw": round(
                     max(0.0, power - supplied_power),
